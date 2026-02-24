@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 1 — Cause &amp; Effect (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Cause & Effect (0 misses required)" />
+  <style>
+    /* Game-specific layout (keeps your hub/brand look) */
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .topbar{
+      display:flex; flex-wrap:wrap; gap:10px;
+      align-items:center; justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{
+      font-size:12px;
+      color:var(--text);
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 10px;
+      white-space:nowrap;
+    }
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.10);
+    }
+    .btn.danger:hover{
+      border-color:rgba(255,92,122,.45);
+      background:rgba(255,92,122,.10);
+    }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+    .small{ color:var(--muted); font-size:13px; }
+    .stem{ margin:10px 0 0; line-height:1.35; font-size:16px; }
+    .choices{ margin-top:12px; display:grid; gap:10px; }
+    .choice{
+      text-align:left;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px 12px;
+      cursor:pointer;
+      color:var(--text);
+      font-weight:700;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
+    .choice[disabled]{ opacity:.65; cursor:not-allowed; transform:none; }
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+    .hint{ margin-top:10px; color:var(--muted); }
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+    /* On-page error box */
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+    /* Start gate */
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:800;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+    .ghost{ color:var(--muted); font-size:13px; margin-top:10px; }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 1 — Cause &amp; Effect (Mastery)</h1>
+          <div class="small">Mastery = <b>0 misses</b>. Wrong answer → hint → must correct to move on (miss recorded).</div>
+        </div>
+
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <!-- START GATE -->
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="ghost">Tip: Mastery requires finishing the full set with <b>0 misses</b>. If you miss one, you can still finish, but you’ll need a hard restart to earn mastery.</div>
+      </section>
+
+      <!-- GAME -->
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Question</div>
+            <div class="small" id="tag">OST-style • CS aligned</div>
+          </div>
+          <div class="stem" id="stem">—</div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Your session summary is stamped below.
+          </div>
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small" style="color:var(--muted);">
+        If the page ever “white screens,” the error box above will show where/why.
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   HARDENED SHELL + SAFETY
+========================= */
+
+// On-page error box
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+
+// bfcache fix (Safari/Chrome back-forward cache)
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.location.reload();
+});
+
+// History guard against back-button returning to “finished” state
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{
+      history.pushState({guard:1}, document.title, location.href);
+    });
+  }catch(_){}
+})();
+
+/* =========================
+   QUESTION BANK (32)
+   Uses your uploaded bank + aligned additions.
+   Controlled shuffling balances A/B/C/D for the correct answer.
+========================= */
+
+const RAW = [
+  {
+    stem: "The Ohio General Assembly is considering a bill that would reduce the amount of tax revenue allocated to local school systems. A group of teachers is opposed to the passage of this bill. What would be the MOST effective action that the teachers' group could take to influence the General Assembly's vote on this bill?",
+    choices: [
+      "Filing an appeal with the State Supreme Court",
+      "Starting a letter writing campaign to state legislators",
+      "Offering comments during local city council meetings",
+      "Holding public demonstrations in front of the White House"
+    ],
+    answerIndex: 1,
+    hint: "Hint: Match the problem to the correct level (local/state/federal) and the official who can actually change it.",
+    explain: "Because the General Assembly is a state legislature, contacting state legislators directly is the most targeted and effective influence method."
+  },
+  {
+    stem: "A town council faces budget cuts and can no longer afford to pay for landscaping in town parks. How can a citizen work within his or her own communities or the local government address this problem?",
+    choices: [
+      "By emailing Ohio congressional delegation to inform them of the issue",
+      "By organizing a group of residents to volunteer for weekly park maintenance",
+      "By requesting that the governor supply the town with state funds for park maintenance",
+      "By running for a seat in the general assembly with a promise to increase funding for local parks"
+    ],
+    answerIndex: 1,
+    hint: "Hint: Local problems are most effectively solved through local action or local government participation.",
+    explain: "The issue is local parks and local funding; volunteer maintenance is immediate and directly addresses the need."
+  },
+  {
+    stem: "Marla’s local government is considering an ordinance that would require all residents to separate their trash into two containers before putting it out for collection. Marla thinks this is a good idea. Which action could Marla take to most effectively encourage the passage of this ordinance?",
+    choices: [
+      "Writing to her United States senators to express her opinion and urge them to vote",
+      "Attending a public comment session of the city council and giving reasons for her support",
+      "Volunteering to work on the campaign of a candidate for governor who supports recycling",
+      "Organizing people in her community to express their support to the Ohio General Assembly"
+    ],
+    answerIndex: 1,
+    hint: "Hint: Ordinances are local laws—go to the local body debating it.",
+    explain: "A city ordinance is decided by city council; public comment is a direct input at the correct level."
+  },
+  {
+    stem: "How can a citizen become involved in addressing problems that affect the entire state?",
+    choices: [
+      "By joining a community watch group",
+      "By volunteering for the fire department",
+      "By signing petitions to place issues on the ballot",
+      "By attending a meeting of the local school board"
+    ],
+    answerIndex: 2,
+    hint: "Hint: Statewide issues often require statewide action—ballot issues apply broadly.",
+    explain: "Petitions and statewide ballot measures are a direct state-level mechanism for addressing statewide issues."
+  },
+  {
+    stem: "Your city is debating whether to install a skateboard park on city-owned land. You want to support the park. Which method would be effective in helping to determine public policy on this decision?",
+    choices: [
+      "Participate in the governor’s re-election campaign",
+      "Send an email to your U.S. senators expressing your point of view",
+      "Attend the meeting of the city council and present the benefits of a park",
+      "Organize a letter-writing campaign to members of the Ohio General Assembly"
+    ],
+    answerIndex: 2,
+    hint: "Hint: City-owned land decisions are local—show up where the vote happens.",
+    explain: "City council debates and votes on city policy; presenting at the meeting is direct civic participation."
+  },
+  {
+    stem: "Citizens must choose between a plan to build a new city auditorium or a plan to restore the old one. Supporters of the new auditorium claim that building a new auditorium would be more economical than restoring the old one. In evaluating the credibility of this claim, citizens should pay particular attention to:",
+    choices: [
+      "The number of performances held in the auditorium each year",
+      "The amount of money the supporters spend on promoting their position",
+      "The popularity of the supporters as community leaders",
+      "The projected cost data provided by architects and accountants"
+    ],
+    answerIndex: 3,
+    hint: "Hint: Credibility = evidence + expertise + verifiable data.",
+    explain: "Economic claims should be tested using expert cost projections from qualified professionals."
+  },
+  {
+    stem: "Which basic principle of governance is highlighted in the quote: “Here, sir, the people govern; here they act by their immediate representatives.”",
+    choices: [
+      "Federalism",
+      "Limited government",
+      "Popular sovereignty",
+      "Separation of powers"
+    ],
+    answerIndex: 2,
+    hint: "Hint: Look for language about authority coming from the people.",
+    explain: "Popular sovereignty means government authority is derived from the people through representation."
+  },
+  {
+    stem: "Which statement summarizes the original Federalist position on the Bill of Rights?",
+    choices: [
+      "Additional amendments were needed, given the lack of individual protections",
+      "Adopting the Bill of Rights was too risky because it might threaten ratification of the Constitution",
+      "The Bill of Rights should be adopted because national sovereignty should always come before states rights",
+      "No amendments were needed, as the Constitution already had protections against excessive government power"
+    ],
+    answerIndex: 3,
+    hint: "Hint: Federalists initially argued a Bill of Rights was unnecessary.",
+    explain: "Federalists argued the Constitution already limited government and that listing rights could imply others didn’t exist."
+  },
+  {
+    stem: "In which year do the events in the impoundment timeline illustrate the principle of federalism?",
+    choices: ["1803","1972","1974","1975"],
+    answerIndex: 2,
+    hint: "Hint: Federalism is about national/state power boundaries—look for Congress requiring executive behavior under federal law.",
+    explain: "The Impoundment Control Act (1974) shows federal legislative control shaping how executive action works nationally."
+  },
+  {
+    stem: "Which constitutional amendment served as the basis for the Court’s ruling in Gideon v. Wainwright?",
+    choices: [
+      "Fourth Amendment",
+      "Fifth Amendment",
+      "Sixth Amendment",
+      "Eighth Amendment"
+    ],
+    answerIndex: 2,
+    hint: "Hint: Gideon is about the right to counsel in criminal cases.",
+    explain: "Gideon established that indigent defendants have the right to an attorney under the Sixth Amendment."
+  },
+  {
+    stem: "Which civic responsibility is associated with exercising one’s right to vote?",
+    choices: [
+      "Reporting for jury duty",
+      "Receiving firearms training",
+      "Serving in the armed forces",
+      "Being informed on public issues"
+    ],
+    answerIndex: 3,
+    hint: "Hint: Voting responsibly requires knowledge of issues/candidates.",
+    explain: "A key responsibility connected to voting is being informed so choices reflect real understanding of issues."
+  },
+  {
+    stem: "Which is a civic responsibility of citizens?",
+    choices: [
+      "Serving on a jury",
+      "Attending college",
+      "Donating money to charity",
+      "Being active in a political party"
+    ],
+    answerIndex: 0,
+    hint: "Hint: Think of responsibilities required by law or fundamental citizenship duties.",
+    explain: "Jury service is a core civic responsibility tied to the justice system."
+  },
+  {
+    stem: "Which right of U.S. citizens does the civic responsibility of jury service safeguard?",
+    choices: [
+      "Right to an education",
+      "Right to an impartial jury",
+      "Right to be mayor of a city",
+      "Right to read the newspaper"
+    ],
+    answerIndex: 1,
+    hint: "Hint: Jury duty directly supports fair trials.",
+    explain: "Jury service protects the right to an impartial jury in criminal and civil trials."
+  },
+  {
+    stem: "In the 1950s and 1960s, all three branches acted to extend civil rights. Why did President Kennedy order the Alabama National Guard to force Governor Wallace to comply at the University of Alabama?",
+    choices: [
+      "The state judicial branch refused to comply with an executive order",
+      "The state executive branch refused to comply with a federal court ruling",
+      "The federal judicial branch refused to comply with a ruling by the state judicial branch",
+      "The federal legislative branch refused to comply with the state executive branch decision"
+    ],
+    answerIndex: 1,
+    hint: "Hint: Identify which level/branch refused to follow a federal judicial decision.",
+    explain: "The state executive resisted desegregation ordered by federal courts; the federal executive enforced compliance."
+  },
+  {
+    stem: "Which entity of government is responsible for negotiating international trade agreements?",
+    choices: [
+      "Federal judicial",
+      "State executive",
+      "State legislative",
+      "Federal executive"
+    ],
+    answerIndex: 3,
+    hint: "Hint: Foreign policy and negotiations are primarily executive responsibilities.",
+    explain: "The president and executive agencies negotiate foreign agreements (subject to constitutional checks)."
+  },
+  {
+    stem: "Which sentence is an example of collaboration that helps create the policy related to international trade agreements?",
+    choices: [
+      "State legislators could pass laws that would overturn the terms of the trade agreement",
+      "Governors could establish separate economic agreements with leaders of other countries",
+      "The Supreme Court could review the proposed agreement and rule on its constitutionality",
+      "State Department officials could advise the president on the impact of an agreement on foreign policy"
+    ],
+    answerIndex: 3,
+    hint: "Hint: Collaboration = agencies helping the president craft policy.",
+    explain: "Executive agencies like the State Department advise the president on foreign policy implications."
+  },
+  {
+    stem: "Which action demonstrates checks and balances?",
+    choices: [
+      "Both houses of Congress override a presidential veto",
+      "The president discusses trade with an ambassador",
+      "Congress limits campaign contributions",
+      "A senator criticizes a Supreme Court ruling"
+    ],
+    answerIndex: 0,
+    hint: "Hint: A true check involves one branch limiting another branch’s power.",
+    explain: "Overriding a veto is a legislative check on the executive."
+  },
+  {
+    stem: "The 13th Amendment to the Constitution was ratified in 1865. What was its primary purpose?",
+    choices: [
+      "To establish the definition of U.S. citizenship",
+      "To abolish slavery and involuntary servitude",
+      "To establish the right to vote for former slaves",
+      "To prevent former Confederate officers from holding office"
+    ],
+    answerIndex: 1,
+    hint: "Hint: 13th = slavery abolished.",
+    explain: "The 13th Amendment ended slavery and involuntary servitude (except as punishment for crime)."
+  },
+  {
+    stem: "How then did the 24th Amendment expand on the 15th Amendment?",
+    choices: [
+      "By granting African-American women the right to vote",
+      "By ensuring the election of an African-American to each state’s legislature",
+      "By requiring states to create congressional districts specifically for African-Americans",
+      "By removing an economic barrier that prevented many African-Americans from voting"
+    ],
+    answerIndex: 3,
+    hint: "Hint: 24th = poll tax banned in federal elections.",
+    explain: "The 24th Amendment eliminated poll taxes, removing an economic barrier that restricted voting."
+  },
+  {
+    stem: "How were voting qualifications for national elections changed by a constitutional amendment?",
+    choices: [
+      "By lowering the minimum age to vote",
+      "By adding a poll tax requirement prior to voting",
+      "By making citizens over a specific age pass a test to vote",
+      "By limiting general election voting to those who voted in the primary elections"
+    ],
+    answerIndex: 0,
+    hint: "Hint: Think 26th Amendment.",
+    explain: "The 26th Amendment lowered the voting age to 18."
+  },
+  {
+    stem: "What was the result of the addition of the 15th and 24th Amendments to the U.S. Constitution?",
+    choices: [
+      "The requirements for citizenship were revised",
+      "Civil rights were extended to disenfranchised groups",
+      "New powers were granted to states to regulate election rules",
+      "Strict restrictions were placed on federal campaign fundraising"
+    ],
+    answerIndex: 1,
+    hint: "Hint: Both amendments expand access to voting.",
+    explain: "These amendments reduced voting discrimination and expanded participation for disenfranchised groups."
+  },
+  {
+    stem: "How did the 12th Amendment alter how the president and vice president are elected in the Electoral College?",
+    choices: [
+      "Electors vote for a candidate for president and vice president separately",
+      "Electors must choose the candidates with the most popular votes for president and vice president",
+      "Electors must vote for a candidate for president from one party and vice president from the opposite party",
+      "Electors choose two candidates for president; top becomes president and other becomes vice president"
+    ],
+    answerIndex: 0,
+    hint: "Hint: 12th = separate ballots.",
+    explain: "The 12th Amendment required separate Electoral College votes for president and vice president."
+  },
+  {
+    stem: "Which circumstance prompted the adoption of the 23rd Amendment?",
+    choices: [
+      "A tie in the presidential election of 1800",
+      "Difficulties enforcing the ban on alcohol",
+      "President Lyndon Johnson’s poor health",
+      "The growing population of Washington, D.C."
+    ],
+    answerIndex: 3,
+    hint: "Hint: 23rd = D.C. gets electoral votes.",
+    explain: "The 23rd Amendment gave D.C. Electoral College votes as its population grew."
+  },
+  {
+    stem: "What does the 25th Amendment establish that had been previously undefined in the Constitution?",
+    choices: [
+      "The separate election of presidents and vice presidents",
+      "A process for addressing a temporary disability of the president",
+      "A limit on the number of terms the president may serve in office",
+      "A shorter period between election and the date the president takes office"
+    ],
+    answerIndex: 1,
+    hint: "Hint: 25th = succession/disability.",
+    explain: "The 25th Amendment clarifies presidential succession and procedures for presidential disability."
+  },
+  {
+    stem: "What is one outcome the Federal Reserve might want to produce when purchasing government securities?",
+    choices: [
+      "Increasing interest rates",
+      "Reducing the money supply",
+      "Fostering economic expansion",
+      "Fostering economic contraction"
+    ],
+    answerIndex: 2,
+    hint: "Hint: Buying securities generally increases money supply and can lower rates.",
+    explain: "Purchasing securities injects money into the economy, promoting expansion."
+  },
+  {
+    stem: "What is the effect when the Federal Reserve increases interest rates?",
+    choices: [
+      "The cost of taking out loans increases",
+      "Consumers spend more in the economy",
+      "The government receives a large increase in tax revenue",
+      "Sudden inflation causes prices to go up"
+    ],
+    answerIndex: 0,
+    hint: "Hint: Higher rates make borrowing more expensive.",
+    explain: "Higher interest rates raise borrowing costs, which tends to slow spending and investment."
+  },
+
+  /* Aligned additions (ODE language / expectations) */
+  {
+    stem: "A citizen wants to challenge a new state law as violating the U.S. Constitution. Which branch has the power to decide whether the law is constitutional?",
+    choices: ["Legislative branch","Executive branch","Judicial branch","Bureaucratic agencies"],
+    answerIndex: 2,
+    hint: "Hint: Which branch interprets the law and hears constitutional cases?",
+    explain: "Courts interpret the Constitution and can declare laws unconstitutional through judicial review."
+  },
+  {
+    stem: "Congress passes a bill. The president vetoes it. What action can Congress take to still make the bill become law?",
+    choices: ["Ask the Supreme Court to approve it","Override the veto with a two-thirds vote in both houses","Send it to the states for ratification","Hold a national referendum"],
+    answerIndex: 1,
+    hint: "Hint: This is a classic legislative check on executive power.",
+    explain: "A two-thirds vote in both houses overrides a veto and makes the bill law."
+  },
+  {
+    stem: "Ohioans vote directly to approve or reject a law passed by the General Assembly. This is an example of Ohio’s use of:",
+    choices: ["Judicial review","Initiative and referendum","Electoral College","Term limits for judges"],
+    answerIndex: 1,
+    hint: "Hint: Ohio’s constitution allows direct voting on laws.",
+    explain: "Referendum is a direct-vote mechanism citizens can use to approve/reject legislation."
+  },
+  {
+    stem: "The Federal Reserve sells government securities. What is the most likely immediate goal of this action?",
+    choices: ["Increase the money supply","Decrease the money supply","Lower interest rates","Increase federal spending"],
+    answerIndex: 1,
+    hint: "Hint: Selling securities pulls money out of circulation.",
+    explain: "Selling securities reduces the money supply and can help slow inflation/overheating."
+  }
+];
+
+/* =========================
+   CONTROLLED SHUFFLING (A/B/C/D BALANCE)
+========================= */
+const LETTERS = ["A","B","C","D"];
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+// Balance correct positions across the set by targeting the least-used letter.
+function buildBalancedSet(raw){
+  const counts = {A:0,B:0,C:0,D:0};
+  const built = raw.map(q=>{
+    // create objects with id
+    const choices = q.choices.map((txt, idx)=>({txt, isCorrect: idx===q.answerIndex}));
+    // random shuffle first
+    let s = shuffle(choices);
+
+    // find current correct index
+    let ci = s.findIndex(x=>x.isCorrect);
+
+    // choose target letter with lowest count (break ties randomly)
+    const min = Math.min(counts.A,counts.B,counts.C,counts.D);
+    const candidates = LETTERS.filter(L=>counts[L]===min);
+    const targetLetter = candidates[Math.floor(Math.random()*candidates.length)];
+    const targetIndex = LETTERS.indexOf(targetLetter);
+
+    // rotate by swapping to land correct at targetIndex
+    if(ci !== targetIndex){
+      const tmp = s[targetIndex];
+      s[targetIndex] = s[ci];
+      s[ci] = tmp;
+      ci = targetIndex;
+    }
+    counts[targetLetter]++;
+
+    return {
+      stem: q.stem,
+      tag: q.tag || "OST-style • CS aligned",
+      hint: q.hint || "Hint: Focus on the level of government and the power described in the stem.",
+      explain: q.explain || "Because the correct option matches the constitutional power or civic process in the stem.",
+      choices: s.map(x=>x.txt),
+      answerIndex: ci
+    };
+  });
+
+  // Randomize question order (does NOT change the balanced answer distribution)
+  return shuffle(built);
+}
+
+/* =========================
+   GAME STATE
+========================= */
+const KEY = "LEGEND_GOV1_V1";
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tag = document.getElementById('tag');
+const stem = document.getElementById('stem');
+const choicesBox = document.getElementById('choices');
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function nowStr(){
+  const d = new Date();
+  return d.toLocaleString([], {year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  const mm = String(m).padStart(2,'0');
+  const rr = String(r).padStart(2,'0');
+  return `${mm}:${rr}`;
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  // also clear any timer state
+  window.location.reload();
+}
+
+// Buttons
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+// Start
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    nameInput.focus();
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{
+  if(e.key==="Enter") startBtn.click();
+});
+
+function startNew(name){
+  const bank = buildBalancedSet(RAW);
+  const startAt = Date.now();
+
+  state = {
+    version: "GOV1_V1",
+    name,
+    startAt,
+    endAt: null,
+    idx: 0,
+    bank,
+    misses: 0,
+    attempts: 0,         // total attempts
+    wrongSet: {},        // per-question miss recorded once: {qIndex:true}
+    finished: false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  // timer
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{
+    elElapsed.textContent = fmtElapsed(Date.now()-state.startAt);
+  }, 250);
+
+  render();
+}
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10; // 0.1 precision
+  return `${pct}%`;
+}
+
+function resetMsgs(){
+  goodMsg.style.display="none";
+  badMsg.style.display="none";
+  hintMsg.style.display="none";
+  goodMsg.textContent="";
+  badMsg.textContent="";
+  hintMsg.textContent="";
+}
+
+function render(){
+  if(state.finished){
+    showFinish();
+    return;
+  }
+
+  const q = state.bank[state.idx];
+  resetMsgs();
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Question ${state.idx+1}`;
+  tag.textContent = q.tag || "OST-style • CS aligned";
+  stem.textContent = q.stem;
+
+  // build buttons
+  choicesBox.innerHTML = "";
+  q.choices.forEach((c, i)=>{
+    const btn = document.createElement('button');
+    btn.className = "choice";
+    btn.type = "button";
+    btn.textContent = `${LETTERS[i]}. ${c}`;
+    btn.addEventListener('click', ()=>choose(i));
+    choicesBox.appendChild(btn);
+  });
+}
+
+function lockChoices(lock=true){
+  choicesBox.querySelectorAll('button.choice').forEach(b=>b.disabled = lock);
+}
+
+function choose(choiceIndex){
+  const q = state.bank[state.idx];
+  state.attempts += 1;
+
+  const correct = (choiceIndex === q.answerIndex);
+  if(correct){
+    lockChoices(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = "Correct. " + (q.explain || "");
+
+    save();
+
+    // move on quickly (still gives a quick “why”)
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        lockChoices(false);
+        save();
+        render();
+      }
+    }, 1100);
+
+  }else{
+    // record miss ONCE per question (first time they miss it)
+    if(!state.wrongSet[state.idx]){
+      state.wrongSet[state.idx] = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = "Not yet. A miss has been recorded. Use the hint, then try again.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = q.hint || "Hint: Identify the level of government and the power described.";
+
+    // keep choices enabled; must correct to move on
+    save();
+
+    // update stats immediately
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+  }
+}
+
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+
+function showFinish(){
+  if(timer) clearInterval(timer);
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  // hide question box interactions once finished
+  lockChoices(true);
+}
+
+/* =========================
+   BOOT
+========================= */
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV1_V1"){
+    state = existing;
+    // If they were finished, show finish, else resume.
+    gate.style.display = "none";
+    game.style.display = "block";
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    // show gate
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
