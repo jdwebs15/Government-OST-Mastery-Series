@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 2 — Select Two (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Select Two (0 misses required)" />
+  <style>
+    /* Game-specific layout (keeps your hub/brand look) */
+    .gameWrap{ width:min(1100px, 92vw); margin:26px auto; }
+    .panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .topbar{
+      display:flex; flex-wrap:wrap; gap:10px;
+      align-items:center; justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{
+      font-size:12px;
+      color:var(--text);
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 10px;
+      white-space:nowrap;
+    }
+
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.10);
+    }
+    .btn.danger:hover{
+      border-color:rgba(255,92,122,.45);
+      background:rgba(255,92,122,.10);
+    }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+
+    /* Start gate */
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:800;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+    .ghost{ color:var(--muted); font-size:13px; margin-top:10px; }
+
+    /* Question box */
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+    .small{ color:var(--muted); font-size:13px; }
+    .stem{ margin:10px 0 0; line-height:1.35; font-size:16px; }
+
+    .choices{ margin-top:12px; display:grid; gap:10px; }
+    .choice{
+      text-align:left;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px 12px;
+      cursor:pointer;
+      color:var(--text);
+      font-weight:700;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
+    .choice.selected{
+      border-color:rgba(122,162,255,.55);
+      background:rgba(122,162,255,.12);
+    }
+    .choice[disabled]{ opacity:.65; cursor:not-allowed; transform:none; }
+
+    .actionRow{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .counter{
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:12px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    /* On-page error box */
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 2 — Select Two (Mastery)</h1>
+          <div class="small">Select <b>exactly TWO</b> correct answers. Mastery = <b>0 misses</b>. Wrong → hint → must correct to move on.</div>
+        </div>
+
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <!-- START GATE -->
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="ghost">Mastery requires finishing the full set with <b>0 misses</b>. If you miss one, complete anyway, then hard restart to try for mastery.</div>
+      </section>
+
+      <!-- GAME -->
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Question</div>
+            <div class="small" id="tag">OST-style • Select Two • CS aligned</div>
+          </div>
+
+          <div class="stem" id="stem">—</div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="actionRow">
+            <div class="counter" id="selCount">Selected: 0/2</div>
+            <button class="btn" id="submitBtn">Submit</button>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small" style="color:var(--muted);">
+        Tip: If the page ever “white screens,” the on-page error box will show where/why.
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   HARDENED SHELL + SAFETY
+========================= */
+
+// On-page error box
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+
+// bfcache fix
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.location.reload();
+});
+
+// History guard against back-button returning to “finished” state
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{
+      history.pushState({guard:1}, document.title, location.href);
+    });
+  }catch(_){}
+})();
+
+/* =========================
+   QUESTION BANK (30)
+   - Uses your existing bank language where possible (ex: Bill of Rights crime protections; negotiation strategies).
+   - Filled out with OST-style Select Two items aligned to CS 1–21 expectations.
+   - Each item has exactly TWO correct answers.
+========================= */
+
+const RAW = [
+  // Pulled/Adapted from your bank (Select Two)
+  {
+    tag: "CS-aligned • Bill of Rights",
+    stem: "Select two ways the Bill of Rights provides protection for individuals accused of a crime.",
+    choices: [
+      "It establishes protection against self-incrimination",
+      "It establishes protection against cruel and unusual punishment",
+      "It establishes the right to bear arms",
+      "It establishes the right to freedom of religion"
+    ],
+    correct: [0,1],
+    hint: "Hint: Think criminal procedure protections (5th/8th) rather than general freedoms."
+  },
+  {
+    tag: "CS-aligned • Negotiation / Influence",
+    stem: "Suppose the President directs advisors to develop negotiation-based strategies. Select the two strategies that represent forms of negotiation.",
+    choices: [
+      "Meet with senators opposed to the treaty to discuss their concerns",
+      "Offer compromises on parts of the treaty to gain enough support",
+      "Conduct media interviews explaining why the treaty should be approved",
+      "Threaten to veto all bills until the Senate approves the treaty"
+    ],
+    correct: [0,1],
+    hint: "Hint: Negotiation involves direct discussion and compromise, not pressure tactics or media persuasion."
+  },
+
+  // Civic involvement / processes (CS 1–2)
+  {
+    tag: "CS 1 • Civic engagement",
+    stem: "A city is deciding whether to change a local ordinance. Select the two actions that most directly influence this local public policy decision.",
+    choices: [
+      "Attend a city council meeting and speak during public comment",
+      "Email city council members with evidence and proposed solutions",
+      "Ask the U.S. Supreme Court to block the ordinance",
+      "Petition the president to issue an executive order for the city"
+    ],
+    correct: [0,1],
+    hint: "Hint: Local ordinances are decided by local officials; go where the local vote happens."
+  },
+  {
+    tag: "CS 1 • Political vs public policy processes",
+    stem: "Select two actions that are examples of participating in the political process (gaining power/influencing who holds office).",
+    choices: [
+      "Register voters and campaign for a candidate",
+      "Volunteer to organize a get-out-the-vote event",
+      "Testify at an agency hearing about a proposed regulation",
+      "Write a letter asking a department to change how it enforces a rule"
+    ],
+    correct: [0,1],
+    hint: "Hint: Political process is tied to elections/candidates/parties."
+  },
+  {
+    tag: "CS 2 • Parties / interest groups / media",
+    stem: "Select two ways interest groups can influence public policy.",
+    choices: [
+      "Lobby legislators to support or oppose a bill",
+      "File a lawsuit to challenge a law’s constitutionality",
+      "Issue executive orders to create new laws",
+      "Appoint federal judges without Senate involvement"
+    ],
+    correct: [0,1],
+    hint: "Hint: Interest groups can lobby and litigate; they do not hold executive appointment powers."
+  },
+  {
+    tag: "CS 2 • Media",
+    stem: "Select two reasons media coverage can influence government decision-making.",
+    choices: [
+      "It shapes public opinion that elected officials pay attention to",
+      "It can increase awareness of an issue and pressure officials to respond",
+      "It allows the media to vote on bills in Congress",
+      "It replaces the need for citizens to participate in elections"
+    ],
+    correct: [0,1],
+    hint: "Hint: Media influences indirectly through information and public pressure."
+  },
+
+  // Principles of govt (CS 3–4)
+  {
+    tag: "CS 3 • Popular sovereignty / limited government",
+    stem: "Select two statements that reflect the principle of popular sovereignty.",
+    choices: [
+      "Government authority comes from the people through elections",
+      "The people can replace leaders who misuse power",
+      "States can ignore federal laws they disagree with",
+      "Courts can create new laws without constitutional limits"
+    ],
+    correct: [0,1],
+    hint: "Hint: Popular sovereignty is about where authority originates and how leaders are accountable."
+  },
+  {
+    tag: "CS 3 • Limited government",
+    stem: "Select two examples of limited government in the U.S. constitutional system.",
+    choices: [
+      "The Bill of Rights restricts what government can do to individuals",
+      "Government officials must follow the Constitution and laws",
+      "The president can rule by decree without checks",
+      "Congress can suspend elections whenever it wants"
+    ],
+    correct: [0,1],
+    hint: "Hint: Limited government = constitutional limits and protected rights."
+  },
+  {
+    tag: "CS 4 • Federalism",
+    stem: "Select two statements that best illustrate federalism.",
+    choices: [
+      "State and national governments share power over citizens",
+      "Some powers are reserved to states while others belong to the national government",
+      "The judiciary controls the budget process",
+      "The president writes all state laws"
+    ],
+    correct: [0,1],
+    hint: "Hint: Federalism is about the division of power between state and national levels."
+  },
+
+  // Branches and checks (CS 5–8)
+  {
+    tag: "CS 5–8 • Checks and balances",
+    stem: "Select two actions that are examples of checks and balances.",
+    choices: [
+      "Congress overrides a presidential veto",
+      "The Supreme Court declares a law unconstitutional",
+      "A governor signs a bill passed by a state legislature",
+      "A citizen posts an opinion online about a policy"
+    ],
+    correct: [0,1],
+    hint: "Hint: A check is one branch limiting another branch’s power."
+  },
+  {
+    tag: "CS 5–8 • Separation of powers",
+    stem: "Select two core powers that belong to the legislative branch.",
+    choices: [
+      "Making laws by passing bills",
+      "Approving the federal budget and taxation",
+      "Commanding the military in war",
+      "Deciding guilt or innocence in criminal trials"
+    ],
+    correct: [0,1],
+    hint: "Hint: Legislature writes laws and controls revenue/spending."
+  },
+  {
+    tag: "CS 5–8 • Executive branch",
+    stem: "Select two responsibilities most closely associated with the executive branch.",
+    choices: [
+      "Enforcing laws passed by the legislature",
+      "Negotiating treaties and conducting foreign policy",
+      "Declaring laws unconstitutional",
+      "Creating state constitutions"
+    ],
+    correct: [0,1],
+    hint: "Hint: Executive enforces and leads foreign policy; courts interpret."
+  },
+  {
+    tag: "CS 5–8 • Judicial branch",
+    stem: "Select two statements about the judicial branch that are accurate.",
+    choices: [
+      "Courts interpret laws and the Constitution when resolving cases",
+      "Courts can determine whether a law violates the Constitution",
+      "Courts write federal budgets",
+      "Courts command the armed forces"
+    ],
+    correct: [0,1],
+    hint: "Hint: Judiciary interprets and reviews constitutionality."
+  },
+
+  // Rights / incorporation / civil liberties (CS 9–12)
+  {
+    tag: "CS 9–12 • Civil liberties",
+    stem: "Select two protections included in the Fifth Amendment.",
+    choices: [
+      "Protection against self-incrimination",
+      "Protection against double jeopardy",
+      "Right to bear arms",
+      "Freedom of the press"
+    ],
+    correct: [0,1],
+    hint: "Hint: Fifth Amendment = self-incrimination + double jeopardy + due process."
+  },
+  {
+    tag: "CS 9–12 • Sixth Amendment",
+    stem: "Select two rights protected by the Sixth Amendment.",
+    choices: [
+      "Right to counsel in criminal prosecutions",
+      "Right to a speedy and public trial",
+      "Right to be free from unreasonable searches",
+      "Right to vote at age 18"
+    ],
+    correct: [0,1],
+    hint: "Hint: Sixth = trial rights (speedy/public/counsel/confront)."
+  },
+  {
+    tag: "CS 9–12 • Fourth Amendment",
+    stem: "Select two requirements that generally must be met for a valid search warrant.",
+    choices: [
+      "Probable cause supported by oath or affirmation",
+      "A particular description of the place to be searched and items to be seized",
+      "Approval by the president before police can search",
+      "Automatic permission to search everyone in a neighborhood"
+    ],
+    correct: [0,1],
+    hint: "Hint: Warrants require probable cause and particularity."
+  },
+
+  // Reconstruction & voting rights (CS 9–11)
+  {
+    tag: "CS 9 • Reconstruction Amendments",
+    stem: "Select two ways the Reconstruction Amendments attempted to address African American inequality.",
+    choices: [
+      "Abolishing slavery",
+      "Providing citizenship and equal protection under the law",
+      "Creating a national religion",
+      "Eliminating the federal court system"
+    ],
+    correct: [0,1],
+    hint: "Hint: 13th ends slavery; 14th establishes citizenship and equal protection."
+  },
+  {
+    tag: "CS 10–11 • Voting rights",
+    stem: "Select two amendments that expanded voting access by removing barriers.",
+    choices: [
+      "15th Amendment",
+      "24th Amendment",
+      "3rd Amendment",
+      "7th Amendment"
+    ],
+    correct: [0,1],
+    hint: "Hint: 15th prohibits race-based denial; 24th bans poll taxes in federal elections."
+  },
+  {
+    tag: "CS 10–11 • Voting rights",
+    stem: "Select two statements that correctly describe how the 26th Amendment changed voting qualifications.",
+    choices: [
+      "It lowered the minimum voting age to 18",
+      "It expanded voting access for young adults in national and state elections",
+      "It created the Electoral College",
+      "It required a literacy test for new voters"
+    ],
+    correct: [0,1],
+    hint: "Hint: 26th = vote at 18; it removed an age barrier, not created new ones."
+  },
+
+  // Elections / electoral college / presidency structure (CS 13+)
+  {
+    tag: "CS 13 • Electoral College / elections",
+    stem: "Select two accurate statements about the Electoral College system.",
+    choices: [
+      "Presidential elections use electors rather than a direct national popular vote",
+      "Each state’s electoral vote total is based on its representation in Congress",
+      "The Supreme Court appoints electors in every state",
+      "Voters directly cast ballots for president in Congress"
+    ],
+    correct: [0,1],
+    hint: "Hint: Electoral votes reflect House + Senate seats; citizens choose slates of electors."
+  },
+  {
+    tag: "CS 13 • 12th Amendment",
+    stem: "Select two changes associated with the 12th Amendment.",
+    choices: [
+      "Electors cast separate votes for president and vice president",
+      "It reduced the chance of confusion when candidates ran as party tickets",
+      "It abolished the Electoral College",
+      "It required a national popular vote to decide the president"
+    ],
+    correct: [0,1],
+    hint: "Hint: Separate ballots for president and VP; it kept the Electoral College."
+  },
+  {
+    tag: "CS 13 • 25th Amendment",
+    stem: "Select two purposes of the 25th Amendment.",
+    choices: [
+      "Clarifying presidential succession if the president cannot serve",
+      "Creating a process for dealing with presidential disability",
+      "Creating the Bill of Rights",
+      "Eliminating term limits for presidents"
+    ],
+    correct: [0,1],
+    hint: "Hint: 25th = succession and disability procedures."
+  },
+
+  // Public policy / fiscal & monetary policy (CS 14+)
+  {
+    tag: "CS 14 • Fiscal policy",
+    stem: "Select two actions that are examples of fiscal policy.",
+    choices: [
+      "Congress increases government spending during a recession",
+      "Congress reduces taxes to stimulate consumer demand",
+      "The Federal Reserve raises interest rates",
+      "A court overturns a state law"
+    ],
+    correct: [0,1],
+    hint: "Hint: Fiscal policy = taxing and spending decisions made by government."
+  },
+  {
+    tag: "CS 14 • Monetary policy",
+    stem: "Select two actions the Federal Reserve can use to influence the money supply and interest rates.",
+    choices: [
+      "Buying or selling government securities (open market operations)",
+      "Changing the target interest rate influence through policy tools",
+      "Passing a constitutional amendment",
+      "Approving Supreme Court nominees"
+    ],
+    correct: [0,1],
+    hint: "Hint: Fed tools affect money supply/credit conditions, not constitutional structure."
+  },
+  {
+    tag: "CS 14 • Interest rates",
+    stem: "When the Federal Reserve increases interest rates, select two likely effects.",
+    choices: [
+      "Borrowing becomes more expensive for consumers and businesses",
+      "Some spending and investment may slow down",
+      "Loan payments become smaller for new borrowers",
+      "Inflation automatically disappears overnight"
+    ],
+    correct: [0,1],
+    hint: "Hint: Higher rates = higher cost of credit; tends to cool demand."
+  },
+
+  // Foreign policy / treaties (CS 15+)
+  {
+    tag: "CS 15 • Foreign policy",
+    stem: "Select two statements that correctly describe treaty-making in the federal government.",
+    choices: [
+      "The president negotiates treaties",
+      "The U.S. Senate must approve treaties by a supermajority",
+      "The House of Representatives alone ratifies treaties",
+      "State governors can independently sign treaties with foreign nations"
+    ],
+    correct: [0,1],
+    hint: "Hint: President negotiates; Senate provides advice and consent."
+  },
+  {
+    tag: "CS 15 • Collaboration",
+    stem: "Select two examples of collaboration in foreign policy decision-making.",
+    choices: [
+      "State Department officials advise the president on diplomatic consequences",
+      "The Senate holds hearings and debates whether to approve a treaty",
+      "A local city council votes to declare war",
+      "A state court rewrites a treaty to fit state law"
+    ],
+    correct: [0,1],
+    hint: "Hint: Collaboration occurs within the federal branches/agencies involved in foreign policy."
+  },
+
+  // Civil rights extension via branches (CS 16+)
+  {
+    tag: "CS 16 • Civil rights",
+    stem: "Select two ways all three branches have been involved in extending civil rights.",
+    choices: [
+      "Congress passes civil rights legislation",
+      "Federal courts interpret the Constitution and apply equal protection",
+      "State governors appoint U.S. senators without elections",
+      "The president can permanently remove amendments from the Constitution"
+    ],
+    correct: [0,1],
+    hint: "Hint: Think legislation + judicial interpretation + executive enforcement (even if not listed here)."
+  },
+
+  // Ohio / state-local structure (CS 17+)
+  {
+    tag: "CS 17 • Ohio citizenship / state & local",
+    stem: "Select two actions that are most directly connected to influencing local government decisions.",
+    choices: [
+      "Speaking at a school board or city council meeting",
+      "Contacting a mayor or council member about a local issue",
+      "Asking the U.S. president to change the city budget",
+      "Asking the Supreme Court to write a new city ordinance"
+    ],
+    correct: [0,1],
+    hint: "Hint: Local decisions are influenced through local meetings and local officials."
+  },
+
+  // Additional OST-style select two to hit 30 total (tight, test-like)
+  {
+    tag: "CS 5–8 • Legislative oversight",
+    stem: "Select two ways Congress can check the executive branch.",
+    choices: [
+      "Hold hearings and investigations of executive agencies",
+      "Control funding through appropriations",
+      "Appoint cabinet secretaries unilaterally",
+      "Command troops in the field"
+    ],
+    correct: [0,1],
+    hint: "Hint: Oversight + budget power are major legislative checks."
+  },
+  {
+    tag: "CS 9–12 • Incorporation",
+    stem: "Select two statements that best describe the doctrine of incorporation.",
+    choices: [
+      "It applies many Bill of Rights protections to state governments through the 14th Amendment",
+      "It expanded federal court involvement in protecting individual rights against states",
+      "It eliminated the Bill of Rights",
+      "It requires states to copy the U.S. Constitution word-for-word"
+    ],
+    correct: [0,1],
+    hint: "Hint: Incorporation connects the Bill of Rights to the states via the 14th."
+  },
+  {
+    tag: "CS 2 • Political parties",
+    stem: "Select two common roles political parties play in elections.",
+    choices: [
+      "Recruiting candidates and organizing campaigns",
+      "Helping voters identify candidates’ general policy positions",
+      "Issuing Supreme Court decisions",
+      "Writing and enforcing police procedures"
+    ],
+    correct: [0,1],
+    hint: "Hint: Parties organize elections and help structure voter choices."
+  }
+];
+
+// Ensure exactly 30 items (you can raise to 35 later without changing the engine)
+const TARGET_COUNT = 30;
+
+/* =========================
+   CONTROLLED SHUFFLING (BALANCED PAIRS)
+   - Each question has 2 correct answers out of 4.
+   - We shuffle choices, then place correct items into a rotating pair pattern
+     to avoid "always A & B" type predictability.
+========================= */
+
+const PAIRS = [
+  [0,1],[0,2],[0,3],[1,2],[1,3],[2,3]
+];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildBalancedSelectTwo(raw){
+  // Trim/extend to TARGET_COUNT if needed
+  let bank = raw.slice();
+  if(bank.length > TARGET_COUNT) bank = bank.slice(0, TARGET_COUNT);
+  // If shorter, loop (shouldn't happen here)
+  while(bank.length < TARGET_COUNT) bank.push(raw[bank.length % raw.length]);
+
+  // Track how often each index is used as a correct position
+  const posCounts = [0,0,0,0];
+  let pairIdx = 0;
+
+  const built = bank.map(q=>{
+    const items = q.choices.map((txt, idx)=>({
+      txt,
+      isCorrect: q.correct.includes(idx)
+    }));
+
+    // Random shuffle first
+    let s = shuffle(items);
+
+    // Find current correct indices
+    let cIdx = s.map((x,i)=>x.isCorrect ? i : -1).filter(i=>i>=0);
+
+    // Choose next target pair, but also prefer pairs that keep position counts balanced
+    // Simple heuristic: rotate PAIRS, but if the next pair would heavily overweight a position, skip forward.
+    let tries = 0;
+    let targetPair = PAIRS[pairIdx % PAIRS.length];
+    while(tries < 12){
+      const [a,b] = targetPair;
+      const maxCount = Math.max(...posCounts);
+      // if either target position is already much higher than others, skip
+      if(posCounts[a] <= maxCount && posCounts[b] <= maxCount) break;
+      pairIdx++;
+      targetPair = PAIRS[pairIdx % PAIRS.length];
+      tries++;
+    }
+
+    const targets = targetPair.slice().sort((a,b)=>a-b);
+
+    // Reposition correct items into target indices by swapping
+    // We may need two swaps.
+    function swap(i,j){ const t=s[i]; s[i]=s[j]; s[j]=t; }
+
+    // Refresh correct indices helper
+    function getCorrectIdx(){
+      return s.map((x,i)=>x.isCorrect ? i : -1).filter(i=>i>=0).sort((a,b)=>a-b);
+    }
+
+    // Place first correct into targets[0]
+    cIdx = getCorrectIdx();
+    if(cIdx[0] !== targets[0]){
+      swap(cIdx[0], targets[0]);
+    }
+    // Place second correct into targets[1]
+    cIdx = getCorrectIdx();
+    if(cIdx[1] !== targets[1]){
+      swap(cIdx[1], targets[1]);
+    }
+
+    // Update counts
+    posCounts[targets[0]]++;
+    posCounts[targets[1]]++;
+    pairIdx++;
+
+    const finalCorrect = getCorrectIdx();
+
+    return {
+      tag: q.tag || "OST-style • Select Two • CS aligned",
+      stem: q.stem,
+      hint: q.hint || "Hint: Identify two statements that correctly match the civics concept in the stem.",
+      explain: q.explain || "",
+      choices: s.map(x=>x.txt),
+      correct: finalCorrect
+    };
+  });
+
+  // Shuffle question order (correct indices remain correct per question)
+  return shuffle(built);
+}
+
+/* =========================
+   GAME STATE
+========================= */
+
+const KEY = "LEGEND_GOV2_V1";
+let state = null;
+let timer = null;
+let selected = [];
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tag = document.getElementById('tag');
+const stem = document.getElementById('stem');
+const choicesBox = document.getElementById('choices');
+const submitBtn = document.getElementById('submitBtn');
+const selCount = document.getElementById('selCount');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+
+function resetMsgs(){
+  goodMsg.style.display="none";
+  badMsg.style.display="none";
+  hintMsg.style.display="none";
+  goodMsg.textContent="";
+  badMsg.textContent="";
+  hintMsg.textContent="";
+}
+
+function startNew(name){
+  const bank = buildBalancedSelectTwo(RAW);
+  const startAt = Date.now();
+
+  state = {
+    version:"GOV2_V1",
+    gameTitle:"Gov Game 2 — Select Two (Mastery)",
+    name,
+    startAt,
+    endAt:null,
+    idx:0,
+    bank,
+    misses:0,
+    attempts:0,
+    wrongSet:{},
+    finished:false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{
+    elElapsed.textContent = fmtElapsed(Date.now()-state.startAt);
+  }, 250);
+
+  render();
+}
+
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  resetMsgs();
+  selected = [];
+  selCount.textContent = "Selected: 0/2";
+
+  const q = state.bank[state.idx];
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Question ${state.idx+1}`;
+  tag.textContent = q.tag || "OST-style • Select Two • CS aligned";
+  stem.textContent = q.stem;
+
+  choicesBox.innerHTML = "";
+  q.choices.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.className = "choice";
+    btn.type = "button";
+    btn.textContent = c;
+    btn.addEventListener('click', ()=>{
+      if(btn.disabled) return;
+
+      const isSel = selected.includes(i);
+      if(isSel){
+        selected = selected.filter(x=>x!==i);
+        btn.classList.remove('selected');
+      }else{
+        if(selected.length >= 2) return; // enforce 2 max
+        selected.push(i);
+        btn.classList.add('selected');
+      }
+      selCount.textContent = `Selected: ${selected.length}/2`;
+    });
+    choicesBox.appendChild(btn);
+  });
+
+  submitBtn.disabled = false;
+}
+
+function lockChoices(lock=true){
+  choicesBox.querySelectorAll('button.choice').forEach(b=>b.disabled = lock);
+  submitBtn.disabled = lock;
+}
+
+function sameTwo(a,b){
+  const aa = a.slice().sort((x,y)=>x-y);
+  const bb = b.slice().sort((x,y)=>x-y);
+  return aa.length===2 && bb.length===2 && aa[0]===bb[0] && aa[1]===bb[1];
+}
+
+submitBtn.addEventListener('click', ()=>{
+  if(state.finished) return;
+
+  if(selected.length !== 2){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Select exactly TWO answers before submitting.";
+    return;
+  }
+
+  const q = state.bank[state.idx];
+  state.attempts += 1;
+
+  const correct = sameTwo(selected, q.correct);
+
+  if(correct){
+    lockChoices(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = "Correct.";
+
+    save();
+
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        lockChoices(false);
+        save();
+        render();
+      }
+    }, 900);
+
+  }else{
+    // record miss once per question
+    if(!state.wrongSet[state.idx]){
+      state.wrongSet[state.idx] = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = "Not yet. A miss has been recorded. Use the hint, then try again.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = q.hint || "Hint: Two options correctly match the civics concept in the stem.";
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+    save();
+  }
+});
+
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  lockChoices(true);
+}
+
+/* =========================
+   BOOT
+========================= */
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    nameInput.focus();
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV2_V1"){
+    state = existing;
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
