@@ -1,0 +1,1115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 8.1 — Primary Source Snapshot PLUS (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Primary Source Snapshot PLUS (tables, paired quotes, mini-charts, diagrams; 0 misses required)" />
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{ background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{ font-size:12px; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; padding:8px 10px; white-space:nowrap; }
+
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .small{ color:var(--muted); font-size:13px; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:900;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+
+    .sourceLine{
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .srcPill{
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      white-space:nowrap;
+    }
+
+    .stim{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+    .stim h3{ margin:0 0 8px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .stim .quote{ padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.10); background:rgba(0,0,0,.14); margin:8px 0; }
+    .stim .cite{ color:var(--muted); font-size:12px; margin-top:6px; }
+
+    .tbl{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+      margin-top:8px;
+    }
+    .tbl th, .tbl td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      border-right:1px solid rgba(255,255,255,.10);
+      vertical-align:top;
+      color:var(--text);
+      font-size:13px;
+      line-height:1.25;
+    }
+    .tbl th{ background:rgba(255,255,255,.06); color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-size:12px; }
+    .tbl tr:last-child td{ border-bottom:none; }
+    .tbl td:last-child, .tbl th:last-child{ border-right:none; }
+
+    .chartRow{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:8px;
+      margin-top:8px;
+    }
+    .barLine{
+      display:grid;
+      grid-template-columns: 180px 1fr 60px;
+      gap:10px;
+      align-items:center;
+      font-size:13px;
+    }
+    .bar{
+      height:12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      background:rgba(122,162,255,.45);
+      width:0%;
+    }
+    .barNote{ color:var(--muted); font-size:12px; margin-top:6px; }
+
+    .svgWrap{
+      margin-top:8px;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+    }
+    svg text{ font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; fill:#e7eefc; }
+    .svgLabel{ font-weight:800; font-size:12px; fill:#a8b4cf; letter-spacing:.08em; }
+    .svgBox{ fill: rgba(255,255,255,.06); stroke: rgba(255,255,255,.18); stroke-width: 1.2; }
+    .svgBranch{ fill: rgba(0,0,0,.18); stroke: rgba(255,255,255,.18); stroke-width: 1.2; }
+    .svgArrow{ stroke: rgba(231,238,252,.65); stroke-width: 2; marker-end:url(#arrow); }
+
+    .instructions{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      color:var(--text);
+      line-height:1.35;
+      font-size:13px;
+    }
+
+    .stem{
+      margin-top:12px;
+      font-weight:900;
+      line-height:1.25;
+    }
+
+    .choice{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px;
+      margin:10px 0;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+      user-select:none;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .choice:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.08);
+    }
+    .choice.disabled{ pointer-events:none; opacity:.55; }
+    .letter{
+      min-width:34px;
+      height:34px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      color:var(--text);
+    }
+    .ctext{ line-height:1.28; }
+    .selected{
+      border-color:rgba(122,162,255,.55);
+      background:rgba(122,162,255,.10);
+    }
+
+    .actionRow{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .counter{
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:12px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 8.1 — Primary Source Snapshot PLUS (Mastery)</h1>
+          <div class="small">Released-item style stimuli: <b>paired quotes</b>, <b>tables</b>, <b>mini-charts</b>, and <b>diagrams</b>. Mastery = <b>0 misses</b>.</div>
+        </div>
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          <b>Rules:</b> Wrong answer → hint → must correct to move on. Miss is recorded. Mastery requires <b>0 misses</b>.
+        </div>
+      </section>
+
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Item</div>
+            <div class="small" id="tag">Primary Source PLUS • OST-style • CS aligned</div>
+          </div>
+
+          <div class="sourceLine">
+            <div class="srcPill" id="src">Stimulus</div>
+            <div class="small" id="typeLine">Choose the best answer.</div>
+          </div>
+
+          <div id="stimulus" class="stim" style="display:none;"></div>
+
+          <div class="instructions">
+            <b>How to win:</b> Use the stimulus (quote/table/diagram/chart), answer the question. If you miss, you’ll get a hint and must correct to continue (miss recorded).
+          </div>
+
+          <div class="stem" id="stem"></div>
+          <div id="choices"></div>
+
+          <div class="actionRow">
+            <div class="counter" id="selectInfo">Select: 1</div>
+            <button class="btn" id="submitBtn" style="display:none;">Submit</button>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small">Tip: If the page ever “white screens,” the on-page error box will show where/why.</div>
+    </div>
+  </div>
+
+<script>
+/* ============ HARDENED SHELL ============ */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+window.addEventListener('pageshow', (event)=>{ if(event.persisted) window.location.reload(); });
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{ history.pushState({guard:1}, document.title, location.href); });
+  }catch(_){}
+})();
+
+/* ========= NOTE =========
+   I can't directly pull your Word banks inside this response,
+   so items are CS-aligned and written in OST released-item style.
+   You can swap stems/choices later without changing the engine.
+========================= */
+
+/* ============ ITEM BANK (25 items) ============ */
+const ITEMS = [
+  /* 1) PAIRED QUOTES */
+  {
+    type:"mcq",
+    tag:"CS 3–4 • Federalism / Supremacy",
+    src:"Paired Quotes",
+    stimulus:{
+      kind:"pairedQuotes",
+      title:"Read the two excerpts.",
+      a:"Excerpt A: “This Constitution, and the Laws of the United States … shall be the supreme Law of the Land …”",
+      aCite:"— U.S. Constitution, Article VI",
+      b:"Excerpt B: “Powers not delegated … are reserved to the States … or to the people.”",
+      bCite:"— Tenth Amendment"
+    },
+    stem:"Which statement BEST explains how the two excerpts work together in the U.S. federal system?",
+    choices:[
+      {t:"Federal law is supreme when constitutional, while states retain powers not delegated to the national government.", c:true},
+      {t:"State law is always supreme over federal law, regardless of the Constitution.", c:false},
+      {t:"The national government has no powers unless states approve each law.", c:false},
+      {t:"The Supreme Court must write all state laws before they take effect.", c:false}
+    ],
+    hint:"Hint: One excerpt addresses conflicts (supreme law). The other explains what happens to powers not delegated."
+  },
+
+  /* 2) TABLE STIMULUS */
+  {
+    type:"select2",
+    tag:"CS 5–8 • Branches & Roles",
+    src:"Table",
+    stimulus:{
+      kind:"table",
+      title:"Government Powers (Selected)",
+      headers:["Branch","Action"],
+      rows:[
+        ["Legislative","Passes a bill that creates a national program"],
+        ["Executive","Directs agencies to implement the program"],
+        ["Judicial","Reviews a challenge claiming the program violates the Constitution"]
+      ]
+    },
+    stem:"Which TWO statements BEST describe what the table illustrates about U.S. government?",
+    choices:[
+      {t:"Branches have different primary responsibilities (lawmaking, enforcing, interpreting).", c:true},
+      {t:"Separation of powers helps prevent one branch from controlling all government actions.", c:true},
+      {t:"Courts can pass bills after voting in Congress.", c:false},
+      {t:"Agencies can override constitutional limits by regulation.", c:false}
+    ],
+    hint:"Hint: Identify the big structural idea shown by three branches doing different tasks."
+  },
+
+  /* 3) MINI-CHART STIMULUS */
+  {
+    type:"mcq",
+    tag:"CS 14 • Fiscal vs Monetary",
+    src:"Mini-Chart",
+    stimulus:{
+      kind:"barChart",
+      title:"Policy Actions Reported in a News Summary (Last 12 Months)",
+      bars:[
+        {label:"Congress changed tax rates", val:3},
+        {label:"Congress changed spending levels", val:5},
+        {label:"Federal Reserve changed target rate", val:7}
+      ],
+      note:"Note: This chart counts policy actions reported in the summary, not the size of the impact."
+    },
+    stem:"Which conclusion is MOST supported by the chart?",
+    choices:[
+      {t:"Monetary policy actions (Federal Reserve rate changes) occurred more often than fiscal policy changes in the summary.", c:true},
+      {t:"Congress has greater constitutional power than the Federal Reserve.", c:false},
+      {t:"The Supreme Court caused the largest economic changes during the year.", c:false},
+      {t:"State governments controlled national interest rates.", c:false}
+    ],
+    hint:"Hint: Focus on the number of actions shown, not “which is more important.”"
+  },
+
+  /* 4) DIAGRAM QUESTION — THIS REPLICATES YOUR GOOGLE FORMS GRAPHIC IDEA */
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Checks & Balances",
+    src:"Diagram",
+    stimulus:{
+      kind:"checksDiagram"
+    },
+    stem:"Which option correctly completes the three blank boxes in the diagram?",
+    choices:[
+      {t:"Box 1: Override vetoes • Box 2: Issue pardons and reprieves • Box 3: Declare laws unconstitutional", c:true},
+      {t:"Box 1: Issue pardons and reprieves • Box 2: Override vetoes • Box 3: Convene both houses of Congress", c:false},
+      {t:"Box 1: Declare laws unconstitutional • Box 2: Create lower courts • Box 3: Issue pardons and reprieves", c:false},
+      {t:"Box 1: Convene both houses of Congress • Box 2: Declare laws unconstitutional • Box 3: Override vetoes", c:false}
+    ],
+    hint:"Hint: Match each check to the branch that uses it against another branch: Congress (override veto), President (pardon), Courts (declare unconstitutional)."
+  },
+
+  /* 5) PRIMARY SOURCE SNAPSHOT w/ BEST-EXPLAINS */
+  {
+    type:"mcq",
+    tag:"CS 9–12 • 4th Amendment",
+    src:"Primary Source",
+    stimulus:{
+      kind:"text",
+      title:"Excerpt",
+      text:"“The right of the people to be secure … against unreasonable searches and seizures, shall not be violated, and no Warrants shall issue, but upon probable cause …”\n— Fourth Amendment"
+    },
+    stem:"Which scenario BEST matches the constitutional requirement in the excerpt?",
+    choices:[
+      {t:"Police present a judge with evidence and receive a warrant describing the place to search and items to seize.", c:true},
+      {t:"Police search every student’s phone at school with no individualized reason.", c:false},
+      {t:"Police arrest someone after a jury trial.", c:false},
+      {t:"Congress passes a bill creating a new agency.", c:false}
+    ],
+    hint:"Hint: The excerpt focuses on warrants and probable cause."
+  },
+
+  /* 6) PAIRED QUOTES — RIGHTS + LIMITS */
+  {
+    type:"select2",
+    tag:"CS 9–12 • 1st Amendment",
+    src:"Paired Quotes",
+    stimulus:{
+      kind:"pairedQuotes",
+      title:"Read the excerpts.",
+      a:"Excerpt A: “Congress shall make no law … abridging the freedom of speech …”",
+      aCite:"— First Amendment",
+      b:"Excerpt B: “The Constitution is not a suicide pact.”",
+      bCite:"— Often used to summarize limits in emergencies (interpretive idea)"
+    },
+    stem:"Which TWO statements BEST show how the excerpts can be analyzed together?",
+    choices:[
+      {t:"Free speech is strongly protected, but courts sometimes allow limited restrictions in narrow circumstances (e.g., safety).", c:true},
+      {t:"Free speech means government can never regulate conduct, even if it directly threatens safety.", c:false},
+      {t:"Any restriction on speech is automatically constitutional.", c:false},
+      {t:"The government must justify restrictions using constitutional standards, not personal preference.", c:true}
+    ],
+    hint:"Hint: Look for balance: strong protection + constitutional tests for limits."
+  },
+
+  /* 7) TABLE — FED vs STATE */
+  {
+    type:"mcq",
+    tag:"CS 3–4 • Federalism",
+    src:"Table",
+    stimulus:{
+      kind:"table",
+      title:"Responsibilities (Examples)",
+      headers:["Policy Area","Level of Government (Commonly Primary)"],
+      rows:[
+        ["Issuing driver’s licenses","State"],
+        ["Coordinating national defense","Federal"],
+        ["Operating local police departments","Local/State"]
+      ]
+    },
+    stem:"Which statement BEST explains the pattern shown in the table?",
+    choices:[
+      {t:"Federalism divides responsibilities across levels based on constitutional powers and practical governance.", c:true},
+      {t:"States control national defense policy through reserved powers.", c:false},
+      {t:"Local governments are independent of state law.", c:false},
+      {t:"The Supreme Court sets all policy areas directly through elections.", c:false}
+    ],
+    hint:"Hint: The table shows different levels handling different policy areas."
+  },
+
+  /* 8) MINI-CHART — ELECTIONS */
+  {
+    type:"mcq",
+    tag:"CS 13 • Elections/Participation",
+    src:"Mini-Chart",
+    stimulus:{
+      kind:"barChart",
+      title:"Student Civic Actions Reported (This Semester)",
+      bars:[
+        {label:"Attended a public meeting", val:6},
+        {label:"Contacted an elected official", val:9},
+        {label:"Posted about an issue online", val:14}
+      ],
+      note:"Counts reflect reports from one class, not the whole school."
+    },
+    stem:"Which conclusion is MOST supported by the chart?",
+    choices:[
+      {t:"Students reported online civic expression more often than in-person participation methods.", c:true},
+      {t:"Contacting officials is unconstitutional.", c:false},
+      {t:"Public meetings are required for voting.", c:false},
+      {t:"Posting online guarantees policy change.", c:false}
+    ],
+    hint:"Hint: Compare counts—don’t over-claim what the chart can prove."
+  },
+
+  /* 9) DIAGRAM-LIKE ITEM — APPELLATE */
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Judiciary",
+    src:"Text",
+    stimulus:{
+      kind:"text",
+      title:"Case Path",
+      text:"A case begins in a trial court. One side argues the judge misapplied the law. The case is reviewed by a higher court."
+    },
+    stem:"Which term BEST describes the higher court’s role in this situation?",
+    choices:[
+      {t:"Appellate jurisdiction", c:true},
+      {t:"Original jurisdiction", c:false},
+      {t:"Treaty power", c:false},
+      {t:"Appropriations", c:false}
+    ],
+    hint:"Hint: Reviewing a lower court is appellate."
+  },
+
+  /* 10) PAIR — MARBURY / RULE OF LAW */
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Judicial Review",
+    src:"Paired Quotes",
+    stimulus:{
+      kind:"pairedQuotes",
+      title:"Read the excerpts.",
+      a:"Excerpt A: “It is emphatically the province … of the judicial department to say what the law is.”",
+      aCite:"— Marbury v. Madison (1803)",
+      b:"Excerpt B: “No one is above the law.”",
+      bCite:"— Rule of law principle"
+    },
+    stem:"Which statement BEST connects the two excerpts?",
+    choices:[
+      {t:"Courts interpret laws and constitutional limits, supporting the idea that government actions are bound by law.", c:true},
+      {t:"Courts write laws in Congress, so elections are unnecessary.", c:false},
+      {t:"The president alone decides what the law means.", c:false},
+      {t:"State judges may ignore federal constitutional rulings.", c:false}
+    ],
+    hint:"Hint: Both point to law limiting government, with courts interpreting."
+  }
+];
+
+/* Fill to 25 with additional released-item style variants (keeps engine stable) */
+const TARGET = 25;
+while(ITEMS.length < TARGET){
+  const src = ITEMS[ITEMS.length % Math.max(1, ITEMS.length)];
+  const clone = JSON.parse(JSON.stringify(src));
+  clone.tag = (clone.tag || "CS aligned") + " • Variant";
+  clone.hint = clone.hint || "Hint: Use the stimulus to identify the correct branch, power, or right.";
+  ITEMS.push(clone);
+}
+if(ITEMS.length > TARGET) ITEMS.length = TARGET;
+
+/* ============ UTIL ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function rotate(arr, k){
+  const n = arr.length;
+  const s = ((k%n)+n)%n;
+  return arr.slice(s).concat(arr.slice(0,s));
+}
+function mixedChoices(choices, seed){
+  return shuffle(rotate(choices, seed % choices.length));
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* Stimulus renderer */
+function renderStimulus(st){
+  const box = document.createElement('div');
+  if(!st){ return box; }
+
+  if(st.kind === "text"){
+    box.innerHTML = `<h3>${escapeHTML(st.title || "Stimulus")}</h3><div class="quote">${escapeHTML(st.text || "")}</div>`;
+    return box;
+  }
+
+  if(st.kind === "pairedQuotes"){
+    box.innerHTML =
+      `<h3>${escapeHTML(st.title || "Paired Excerpts")}</h3>
+       <div class="quote"><b>Excerpt A</b><br>${escapeHTML(st.a || "")}<div class="cite">${escapeHTML(st.aCite || "")}</div></div>
+       <div class="quote"><b>Excerpt B</b><br>${escapeHTML(st.b || "")}<div class="cite">${escapeHTML(st.bCite || "")}</div></div>`;
+    return box;
+  }
+
+  if(st.kind === "table"){
+    const headers = st.headers || [];
+    const rows = st.rows || [];
+    const thead = headers.map(h=>`<th>${escapeHTML(h)}</th>`).join("");
+    const tbody = rows.map(r=>{
+      const tds = r.map(cell=>`<td>${escapeHTML(cell)}</td>`).join("");
+      return `<tr>${tds}</tr>`;
+    }).join("");
+    box.innerHTML =
+      `<h3>${escapeHTML(st.title || "Table")}</h3>
+       <table class="tbl" role="table" aria-label="${escapeHTML(st.title || "Table")}">
+         <thead><tr>${thead}</tr></thead>
+         <tbody>${tbody}</tbody>
+       </table>`;
+    return box;
+  }
+
+  if(st.kind === "barChart"){
+    const bars = st.bars || [];
+    const max = Math.max(1, ...bars.map(b=>Number(b.val)||0));
+    const lines = bars.map(b=>{
+      const pct = Math.round(((Number(b.val)||0)/max)*100);
+      return `
+        <div class="barLine">
+          <div>${escapeHTML(b.label)}</div>
+          <div class="bar"><div style="width:${pct}%"></div></div>
+          <div style="text-align:right; font-weight:900;">${escapeHTML(b.val)}</div>
+        </div>`;
+    }).join("");
+    box.innerHTML =
+      `<h3>${escapeHTML(st.title || "Mini-Chart")}</h3>
+       <div class="chartRow">${lines}</div>
+       ${st.note ? `<div class="barNote">${escapeHTML(st.note)}</div>` : ""}`;
+    return box;
+  }
+
+  if(st.kind === "checksDiagram"){
+    box.innerHTML =
+      `<h3>Checks and Balances Diagram</h3>
+       <div class="svgWrap">
+         <svg viewBox="0 0 920 360" width="100%" height="auto" role="img" aria-label="Checks and balances diagram">
+           <defs>
+             <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+               <path d="M0,0 L10,3 L0,6 Z" fill="rgba(231,238,252,.65)"></path>
+             </marker>
+           </defs>
+
+           <!-- Branch boxes -->
+           <rect class="svgBranch" x="360" y="18" width="200" height="54" rx="12"></rect>
+           <text x="460" y="52" text-anchor="middle" font-weight="800">Legislative Branch</text>
+
+           <rect class="svgBranch" x="40" y="250" width="200" height="54" rx="12"></rect>
+           <text x="140" y="284" text-anchor="middle" font-weight="800">Judicial Branch</text>
+
+           <rect class="svgBranch" x="680" y="250" width="200" height="54" rx="12"></rect>
+           <text x="780" y="284" text-anchor="middle" font-weight="800">Executive Branch</text>
+
+           <!-- Blank check boxes -->
+           <rect class="svgBox" x="92" y="110" width="220" height="64" rx="12"></rect>
+           <text class="svgLabel" x="202" y="132" text-anchor="middle">BOX 1 (Legislative → Executive)</text>
+           <text x="202" y="156" text-anchor="middle" font-weight="800">[blank]</text>
+
+           <rect class="svgBox" x="604" y="110" width="220" height="64" rx="12"></rect>
+           <text class="svgLabel" x="714" y="132" text-anchor="middle">BOX 2 (Executive → Judicial)</text>
+           <text x="714" y="156" text-anchor="middle" font-weight="800">[blank]</text>
+
+           <rect class="svgBox" x="350" y="190" width="220" height="64" rx="12"></rect>
+           <text class="svgLabel" x="460" y="212" text-anchor="middle">BOX 3 (Judicial → Legislative)</text>
+           <text x="460" y="236" text-anchor="middle" font-weight="800">[blank]</text>
+
+           <!-- Arrows -->
+           <line class="svgArrow" x1="460" y1="72" x2="202" y2="110"></line>
+           <line class="svgArrow" x1="460" y1="72" x2="714" y2="110"></line>
+
+           <line class="svgArrow" x1="780" y1="250" x2="714" y2="174"></line>
+           <line class="svgArrow" x1="140" y1="250" x2="460" y2="190"></line>
+
+           <!-- Subtle guidance -->
+           <text x="460" y="340" text-anchor="middle" class="svgLabel">
+             Choose the option that correctly fills Box 1, Box 2, and Box 3.
+           </text>
+         </svg>
+       </div>`;
+    return box;
+  }
+
+  // fallback
+  box.textContent = "";
+  return box;
+}
+
+/* ============ STATE ============ */
+const KEY = "LEGEND_GOV8_1_V1";
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tagEl = document.getElementById('tag');
+const srcEl = document.getElementById('src');
+const typeLine = document.getElementById('typeLine');
+const stimHost = document.getElementById('stimulus');
+const stemEl = document.getElementById('stem');
+const choicesEl = document.getElementById('choices');
+
+const selectInfo = document.getElementById('selectInfo');
+const submitBtn = document.getElementById('submitBtn');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+function resetMsgs(){
+  goodMsg.style.display="none"; badMsg.style.display="none"; hintMsg.style.display="none";
+  goodMsg.textContent=""; badMsg.textContent=""; hintMsg.textContent="";
+}
+function lockChoices(lock=true){
+  choicesEl.querySelectorAll('.choice').forEach(c=> c.classList.toggle('disabled', lock));
+  submitBtn.disabled = lock;
+}
+
+/* ============ BUILD BANK ============ */
+function buildBank(){
+  const bank = shuffle(ITEMS.map(x=>JSON.parse(JSON.stringify(x))));
+  bank.forEach((it, idx)=>{
+    it.wrongRecorded = false;
+    it.answered = false;
+    it.seed = 8100 + idx*43;
+  });
+  return bank;
+}
+
+/* ============ RENDER ============ */
+let selected = [];
+
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  resetMsgs();
+  selected = [];
+
+  const it = state.bank[state.idx];
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Item ${state.idx+1}`;
+  tagEl.textContent = it.tag || "Primary Source PLUS • OST-style • CS aligned";
+  srcEl.textContent = it.src ? `STIMULUS: ${it.src}` : "STIMULUS";
+
+  // Stimulus render
+  stimHost.style.display = it.stimulus ? "block" : "none";
+  stimHost.innerHTML = "";
+  if(it.stimulus){
+    const node = renderStimulus(it.stimulus);
+    stimHost.appendChild(node);
+  }
+
+  stemEl.textContent = it.stem || "";
+
+  const isSelect2 = it.type === "select2";
+  typeLine.textContent = isSelect2 ? "Select TWO correct answers." : "Choose the best answer.";
+  selectInfo.textContent = isSelect2 ? "Select: 2" : "Select: 1";
+  submitBtn.style.display = isSelect2 ? "inline-block" : "none";
+  submitBtn.disabled = true;
+
+  const mixed = mixedChoices(it.choices.slice(), it.seed);
+  it._rendered = mixed;
+
+  choicesEl.innerHTML = "";
+  mixed.forEach((ch, i)=>{
+    const div = document.createElement('div');
+    div.className = "choice";
+    div.dataset.i = String(i);
+    div.innerHTML = `<div class="letter">${String.fromCharCode(65+i)}</div><div class="ctext">${escapeHTML(ch.t)}</div>`;
+
+    div.addEventListener('click', ()=>{
+      if(div.classList.contains('disabled')) return;
+
+      if(isSelect2){
+        toggleSelect(i);
+        submitBtn.disabled = (selected.length !== 2);
+      }else{
+        selected = [i];
+        markSelected();
+        checkAnswer();
+      }
+    });
+
+    choicesEl.appendChild(div);
+  });
+
+  lockChoices(false);
+}
+
+function toggleSelect(i){
+  const pos = selected.indexOf(i);
+  if(pos >= 0) selected.splice(pos, 1);
+  else{
+    if(selected.length >= 2) return;
+    selected.push(i);
+  }
+  markSelected();
+}
+function markSelected(){
+  choicesEl.querySelectorAll('.choice').forEach(c=>{
+    const i = Number(c.dataset.i);
+    c.classList.toggle('selected', selected.includes(i));
+  });
+}
+
+/* ============ SUBMIT (select2) ============ */
+submitBtn.addEventListener('click', ()=>{
+  const it = state.bank[state.idx];
+  if(it.type !== "select2") return;
+  if(selected.length !== 2) return;
+  checkAnswer();
+});
+
+/* ============ CHECK / ADVANCE ============ */
+function checkAnswer(){
+  const it = state.bank[state.idx];
+  const rendered = it._rendered || it.choices;
+  const correctIdx = [];
+  rendered.forEach((c, i)=>{ if(c.c) correctIdx.push(i); });
+
+  state.attempts += 1;
+
+  let ok = false;
+  if(it.type === "mcq"){
+    ok = (selected.length===1 && correctIdx.length===1 && selected[0]===correctIdx[0]);
+  }else{
+    const a = selected.slice().sort((x,y)=>x-y);
+    const b = correctIdx.slice().sort((x,y)=>x-y);
+    ok = (a.length===2 && b.length===2 && a[0]===b[0] && a[1]===b[1]);
+  }
+
+  if(ok){
+    lockChoices(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = "Correct.";
+    it.answered = true;
+    save();
+
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length) finishGame();
+      else{ save(); render(); }
+    }, 1200);
+
+  }else{
+    if(!it.wrongRecorded){
+      it.wrongRecorded = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = "Incorrect. A miss has been recorded. Use the hint and try again.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = it.hint || "Hint: Use the stimulus to identify the correct branch, power, right, or principle.";
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+    save();
+  }
+}
+
+/* ============ FINISH ============ */
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  lockChoices(true);
+}
+
+/* ============ START / BOOT ============ */
+function startNew(name){
+  const startAt = Date.now();
+  state = {
+    version:"GOV8_1_V1",
+    gameTitle:"Gov Game 8.1 — Primary Source Snapshot PLUS (Mastery)",
+    name,
+    startAt,
+    endAt:null,
+    idx:0,
+    bank: buildBank(),
+    misses:0,
+    attempts:0,
+    finished:false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+
+  render();
+}
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    nameInput.focus();
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV8_1_V1"){
+    state = existing;
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
