@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 7 — OST Simulation Mixer (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Simulation Mixer (MCQ + Select Two, 0 misses required)" />
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{ background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{ font-size:12px; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; padding:8px 10px; white-space:nowrap; }
+
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .small{ color:var(--muted); font-size:13px; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:900;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+
+    .stim{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+    .instructions{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      color:var(--text);
+      line-height:1.35;
+      font-size:13px;
+    }
+
+    .stem{
+      margin-top:12px;
+      font-weight:900;
+      line-height:1.25;
+    }
+
+    .choice{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px;
+      margin:10px 0;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+      user-select:none;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .choice:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.08);
+    }
+    .choice.disabled{
+      pointer-events:none;
+      opacity:.55;
+    }
+    .letter{
+      min-width:34px;
+      height:34px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      color:var(--text);
+    }
+    .ctext{ line-height:1.28; }
+    .selected{
+      border-color:rgba(122,162,255,.55);
+      background:rgba(122,162,255,.10);
+    }
+
+    .actionRow{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .counter{
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:12px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 7 — OST Simulation Mixer (Mastery)</h1>
+          <div class="small">Mixed OST-style items (MCQ + Select-Two) with stimulus passages. Mastery = <b>0 misses</b>.</div>
+        </div>
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          <b>Rules:</b> Wrong answer → hint → must correct to move on. Miss is recorded. Mastery requires <b>0 misses</b>.
+        </div>
+      </section>
+
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Item</div>
+            <div class="small" id="tag">OST-style • Mixer • CS aligned</div>
+          </div>
+
+          <div id="stimulus" class="stim" style="display:none;"></div>
+
+          <div class="instructions" id="typeLine">
+            Choose the best answer.
+          </div>
+
+          <div class="stem" id="stem"></div>
+          <div id="choices"></div>
+
+          <div class="actionRow">
+            <div class="counter" id="selectInfo">Select: 1</div>
+            <button class="btn" id="submitBtn" style="display:none;">Submit</button>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small">Tip: If the page ever “white screens,” the on-page error box will show where/why.</div>
+    </div>
+  </div>
+
+<script>
+/* ============ HARDENED SHELL ============ */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+window.addEventListener('pageshow', (event)=>{ if(event.persisted) window.location.reload(); });
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{ history.pushState({guard:1}, document.title, location.href); });
+  }catch(_){}
+})();
+
+/* ========= NOTE =========
+   I wasn't able to access your uploaded Word question banks from this chat session,
+   so the items below are OST-style and CS-aligned and can be swapped with your exact
+   stems later without changing the game engine.
+========================= */
+
+/* ============ ITEM BANK (30 items) ============ */
+const ITEMS = [
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Lawmaking",
+    stimulus:"A bill is introduced to increase funding for career-technical programs. The bill is debated and amended, and both chambers of Congress pass it.",
+    stem:"Which action is the next step most directly required for the bill to become law?",
+    choices:[
+      {t:"The president signs the bill (or Congress overrides a veto).", c:true},
+      {t:"The Supreme Court issues a ruling approving the bill.", c:false},
+      {t:"The Electoral College votes to approve the bill.", c:false},
+      {t:"State legislatures ratify the bill as an amendment.", c:false}
+    ],
+    hint:"Hint: Congress passes a bill, but the executive branch has a role before it becomes law.",
+    why:"After passage by Congress, a bill becomes law when the president signs it (or when Congress overrides a veto)."
+  },
+  {
+    type:"select2",
+    tag:"CS 5–8 • Checks & balances",
+    stimulus:"A president nominates a cabinet secretary, and Congress is concerned about accountability.",
+    stem:"Which TWO actions are examples of checks Congress can use on the executive branch?",
+    choices:[
+      {t:"Hold oversight hearings to question agency officials", c:true},
+      {t:"Confirm or reject certain presidential appointments", c:true},
+      {t:"Issue executive orders directing agencies", c:false},
+      {t:"Declare a state law unconstitutional", c:false}
+    ],
+    hint:"Hint: Look for actions Congress can take (House/Senate), not presidential or judicial powers.",
+    why:"Congress can investigate through oversight and can confirm many appointments."
+  },
+  {
+    type:"mcq",
+    tag:"CS 3–4 • Federalism",
+    stimulus:"A state passes a law that conflicts with a constitutional federal law regulating the same issue.",
+    stem:"Which constitutional principle best resolves the conflict?",
+    choices:[
+      {t:"Supremacy Clause", c:true},
+      {t:"Reserved powers", c:false},
+      {t:"Judicial circuit", c:false},
+      {t:"Popular sovereignty", c:false}
+    ],
+    hint:"Hint: Which rule makes valid federal law the “highest law of the land”?",
+    why:"The Supremacy Clause makes constitutional federal law supreme over conflicting state law."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • Fourth Amendment",
+    stimulus:"Police want to search a person’s home for evidence of a crime.",
+    stem:"Which requirement is most directly associated with obtaining a search warrant?",
+    choices:[
+      {t:"Probable cause supported by oath/affirmation", c:true},
+      {t:"A unanimous jury verdict", c:false},
+      {t:"A two-thirds vote in Congress", c:false},
+      {t:"A pardon from the president", c:false}
+    ],
+    hint:"Hint: Warrants must be based on a specific legal standard.",
+    why:"Search warrants require probable cause and must describe the place to be searched and items to be seized."
+  },
+  {
+    type:"select2",
+    tag:"CS 9–12 • Trial rights",
+    stimulus:"A defendant is charged with a felony and is preparing for trial.",
+    stem:"Which TWO rights are guaranteed by the Sixth Amendment in criminal prosecutions?",
+    choices:[
+      {t:"Right to counsel", c:true},
+      {t:"Right to an impartial jury", c:true},
+      {t:"Protection against unreasonable searches", c:false},
+      {t:"Freedom of the press", c:false}
+    ],
+    hint:"Hint: Think “trial procedure” rights—lawyer and jury are key.",
+    why:"The Sixth Amendment includes counsel and jury trial protections."
+  },
+  {
+    type:"mcq",
+    tag:"CS 14 • Monetary policy",
+    stimulus:"Inflation increases rapidly, and the Federal Reserve wants to reduce pressure on prices.",
+    stem:"Which action best matches a contractionary monetary policy?",
+    choices:[
+      {t:"Raise interest-rate conditions to reduce borrowing and spending", c:true},
+      {t:"Increase government spending on highways", c:false},
+      {t:"Cut federal income taxes to boost consumer spending", c:false},
+      {t:"Create a new cabinet department to run elections", c:false}
+    ],
+    hint:"Hint: Monetary policy is the Fed influencing credit conditions, not Congress spending/taxes.",
+    why:"Tighter monetary policy reduces borrowing/spending and can reduce inflation pressure."
+  },
+  {
+    type:"mcq",
+    tag:"CS 14 • Fiscal policy",
+    stimulus:"Unemployment stays high for months. Congress passes legislation increasing unemployment benefits and funding job training.",
+    stem:"This is best described as which type of policy action?",
+    choices:[
+      {t:"Expansionary fiscal policy", c:true},
+      {t:"Contractionary monetary policy", c:false},
+      {t:"Judicial review", c:false},
+      {t:"A reserved power", c:false}
+    ],
+    hint:"Hint: Congress changing spending/benefits is fiscal policy; increasing support is expansionary.",
+    why:"Increasing government spending/benefits is expansionary fiscal policy."
+  },
+  {
+    type:"select2",
+    tag:"CS 2 • Civic participation",
+    stimulus:"A school board is considering a policy change about student cell phone use.",
+    stem:"Which TWO actions are examples of effective civic participation at the local level?",
+    choices:[
+      {t:"Speak during public comment at the board meeting", c:true},
+      {t:"Contact board members with evidence and recommendations", c:true},
+      {t:"Override a presidential veto", c:false},
+      {t:"Ratify a constitutional amendment", c:false}
+    ],
+    hint:"Hint: Local policy → local actions: meetings and contacting officials.",
+    why:"Public comment and contacting officials are common local participation methods."
+  },
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Courts",
+    stimulus:"A federal appeals court reverses a lower court decision because the trial judge applied the wrong legal standard.",
+    stem:"This is an example of the court exercising which kind of jurisdiction?",
+    choices:[
+      {t:"Appellate jurisdiction", c:true},
+      {t:"Original jurisdiction", c:false},
+      {t:"Concurrent powers", c:false},
+      {t:"Executive privilege", c:false}
+    ],
+    hint:"Hint: Appeals courts review lower court decisions.",
+    why:"Appellate jurisdiction involves reviewing lower-court decisions."
+  },
+  {
+    type:"mcq",
+    tag:"CS 13 • Elections",
+    stimulus:"A presidential candidate wins the popular vote in a state by a small margin.",
+    stem:"In most states, what is the most common result in the Electoral College?",
+    choices:[
+      {t:"The candidate receives all of the state’s electoral votes (winner-take-all).", c:true},
+      {t:"The state splits electoral votes equally between candidates.", c:false},
+      {t:"The Supreme Court selects the electors.", c:false},
+      {t:"Congress replaces electors with senators.", c:false}
+    ],
+    hint:"Hint: Most states use a system awarding electors to the statewide winner.",
+    why:"Winner-take-all is used by most states."
+  },
+
+  /* --- Add 20 more OST-style items for depth --- */
+  {
+    type:"select2",
+    tag:"CS 9–12 • First Amendment",
+    stimulus:"A city creates a permit system for large public marches. The system does not consider the viewpoint of the marchers.",
+    stem:"Which TWO statements best describe why this policy can be constitutional?",
+    choices:[
+      {t:"It can be a content-neutral time/place/manner regulation", c:true},
+      {t:"It can support public safety and traffic management", c:true},
+      {t:"It bans criticism of government officials", c:false},
+      {t:"It requires citizens to support a specific religion", c:false}
+    ],
+    hint:"Hint: Look for neutral rules and safety—not viewpoint discrimination.",
+    why:"Neutral time/place/manner rules can be constitutional when narrowly tailored for safety and order."
+  },
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Executive branch",
+    stimulus:"Congress passes a law creating an environmental standard. Federal agencies create detailed rules about how the standard will be measured.",
+    stem:"Which branch is most directly responsible for implementing those rules?",
+    choices:[
+      {t:"Executive branch", c:true},
+      {t:"Judicial branch", c:false},
+      {t:"State legislatures", c:false},
+      {t:"Electoral College", c:false}
+    ],
+    hint:"Hint: Agencies that enforce and implement laws are part of one branch.",
+    why:"Executive agencies implement laws and write regulations within the law’s authority."
+  },
+  {
+    type:"mcq",
+    tag:"CS 3–4 • Principles",
+    stimulus:"A court overturns a government action because it violates constitutional limits.",
+    stem:"This most directly illustrates which principle?",
+    choices:[
+      {t:"Limited government", c:true},
+      {t:"Unitary government", c:false},
+      {t:"Direct democracy", c:false},
+      {t:"Trade embargo", c:false}
+    ],
+    hint:"Hint: The Constitution limits what government can do.",
+    why:"Limited government means government power is restricted by the Constitution."
+  },
+  {
+    type:"select2",
+    tag:"CS 15 • Foreign policy powers",
+    stimulus:"The U.S. is considering a treaty with another nation.",
+    stem:"Which TWO statements are accurate about treaty-making in the U.S. system?",
+    choices:[
+      {t:"The president negotiates and signs treaties", c:true},
+      {t:"The Senate must approve treaties by a supermajority vote", c:true},
+      {t:"The Supreme Court writes treaty terms during trials", c:false},
+      {t:"State governors must ratify every treaty", c:false}
+    ],
+    hint:"Hint: Treaties involve the president and the Senate.",
+    why:"Treaties are negotiated by the president and ratified by a two-thirds Senate vote."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • Fifth Amendment",
+    stimulus:"During questioning, a suspect refuses to answer questions that could be used against them in court.",
+    stem:"Which protection is the suspect relying on?",
+    choices:[
+      {t:"Protection against self-incrimination", c:true},
+      {t:"Freedom of assembly", c:false},
+      {t:"Right to bear arms", c:false},
+      {t:"Protection from cruel and unusual punishment", c:false}
+    ],
+    hint:"Hint: Think “I plead the Fifth.”",
+    why:"The Fifth Amendment protects against being forced to incriminate oneself."
+  },
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Congress powers",
+    stimulus:"A debate occurs over how to pay for a new national transportation project.",
+    stem:"Which power gives Congress authority to raise money for federal projects?",
+    choices:[
+      {t:"Impose taxes", c:true},
+      {t:"Issue warrants", c:false},
+      {t:"Grant pardons", c:false},
+      {t:"Decide criminal sentences", c:false}
+    ],
+    hint:"Hint: Funding national programs relies on a specific legislative power.",
+    why:"Congress has the power to tax and spend for national purposes."
+  },
+  {
+    type:"select2",
+    tag:"CS 2 • Media/interest groups",
+    stimulus:"A proposed law about consumer privacy is gaining attention.",
+    stem:"Which TWO actions best show how the media and interest groups can influence public policy?",
+    choices:[
+      {t:"Media coverage increases public attention and pressure on officials", c:true},
+      {t:"Interest groups lobby lawmakers and provide research on the issue", c:true},
+      {t:"Interest groups certify election results in the Electoral College", c:false},
+      {t:"Media signs bills into law", c:false}
+    ],
+    hint:"Hint: Media informs/spotlights; interest groups lobby/advocate.",
+    why:"Media can shape agenda; interest groups can lobby and mobilize."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • Eighth Amendment",
+    stimulus:"A court reviews whether a punishment is excessively harsh compared to the offense.",
+    stem:"Which constitutional protection is most directly involved?",
+    choices:[
+      {t:"Protection against cruel and unusual punishment", c:true},
+      {t:"Freedom of speech", c:false},
+      {t:"Protection against double jeopardy", c:false},
+      {t:"Right to petition", c:false}
+    ],
+    hint:"Hint: Punishment limits are in one amendment.",
+    why:"The Eighth Amendment restricts cruel and unusual punishments."
+  },
+  {
+    type:"mcq",
+    tag:"CS 13 • Amendments & elections",
+    stimulus:"A candidate and running mate campaign together, and ballots list them as a team.",
+    stem:"Which constitutional change helped formalize separate votes for president and vice president?",
+    choices:[
+      {t:"12th Amendment", c:true},
+      {t:"22nd Amendment", c:false},
+      {t:"25th Amendment", c:false},
+      {t:"10th Amendment", c:false}
+    ],
+    hint:"Hint: One amendment fixed early Electoral College problems with VP selection.",
+    why:"The 12th Amendment requires separate electoral votes for president and vice president."
+  },
+
+  /* 20 more quick-mix items */
+  { type:"mcq", tag:"CS 5–8 • Judicial review", stimulus:"A law is challenged as violating the Constitution.", stem:"Which branch has the primary role in interpreting the Constitution in this dispute?", choices:[{t:"Judicial branch",c:true},{t:"Legislative branch",c:false},{t:"Electoral College",c:false},{t:"State executive councils",c:false}], hint:"Hint: Courts interpret laws and the Constitution.", why:"Courts decide constitutional questions when cases are properly before them." },
+  { type:"select2", tag:"CS 3–4 • Powers", stimulus:"A policy issue involves both the federal and state governments.", stem:"Which TWO are examples of concurrent powers?", choices:[{t:"Collect taxes",c:true},{t:"Build and maintain roads",c:true},{t:"Coin money",c:false},{t:"Declare war",c:false}], hint:"Hint: Shared powers include taxing and infrastructure-related services.", why:"Both levels can tax; states and federal government both fund/maintain infrastructure." },
+  { type:"mcq", tag:"CS 5–8 • Committees", stimulus:"A bill is stuck for weeks while experts testify and revisions are made.", stem:"Where is the bill most likely being evaluated?", choices:[{t:"A congressional committee",c:true},{t:"The Electoral College",c:false},{t:"A jury room",c:false},{t:"A state constitutional convention",c:false}], hint:"Hint: Hearings and markups happen in one place.", why:"Committees hold hearings and revise bills before full chamber votes." },
+  { type:"mcq", tag:"CS 9–12 • Incorporation", stimulus:"A state law is struck down because it violates a right in the Bill of Rights applied through the Fourteenth Amendment.", stem:"What concept best describes this application?", choices:[{t:"Incorporation",c:true},{t:"Nullification",c:false},{t:"Judicial circuit",c:false},{t:"Executive privilege",c:false}], hint:"Hint: It’s about applying Bill of Rights protections to states via the 14th.", why:"Incorporation applies many Bill of Rights protections to states through the Fourteenth Amendment." },
+  { type:"select2", tag:"CS 13 • Presidential limits", stimulus:"A president serves two terms and seeks another elected term.", stem:"Which TWO statements are correct about presidential term limits and succession?", choices:[{t:"The 22nd Amendment limits presidents to two elected terms (with exceptions).",c:true},{t:"The 25th Amendment outlines procedures for disability and succession.",c:true},{t:"The 12th Amendment limits presidents to one term.",c:false},{t:"The 10th Amendment sets presidential succession rules.",c:false}], hint:"Hint: One amendment is about term limits; one is about succession/disability.", why:"22nd = term limits; 25th = disability/succession procedures." },
+  { type:"mcq", tag:"CS 2 • Parties", stimulus:"A group organizes to recruit candidates, raise money, and help voters identify positions.", stem:"This group is best described as a:", choices:[{t:"Political party",c:true},{t:"Jury",c:false},{t:"Federal agency",c:false},{t:"Court circuit",c:false}], hint:"Hint: Candidate recruitment + platforms points to one organization.", why:"Political parties recruit candidates and help organize elections." },
+  { type:"mcq", tag:"CS 15 • War powers", stimulus:"A debate occurs over who has constitutional authority to declare war.", stem:"Which institution has the power to declare war?", choices:[{t:"Congress",c:true},{t:"The Supreme Court",c:false},{t:"The Electoral College",c:false},{t:"The Federal Reserve",c:false}], hint:"Hint: Declaring war is a legislative power.", why:"The Constitution assigns the power to declare war to Congress." },
+  { type:"select2", tag:"CS 9–12 • Speech limits", stimulus:"A student posts an online claim about a teacher that is false and damages reputation.", stem:"Which TWO terms best connect to this situation?", choices:[{t:"Defamation",c:true},{t:"Potential civil liability",c:true},{t:"Double jeopardy",c:false},{t:"Quartering soldiers",c:false}], hint:"Hint: False harmful statements can be a civil issue.", why:"Defamation involves false statements that harm reputation and can lead to civil consequences." },
+  { type:"mcq", tag:"CS 5–8 • Bicameralism", stimulus:"A bill passes the House but not the Senate.", stem:"Which feature of Congress explains why both chambers must pass the same bill?", choices:[{t:"Bicameral legislature",c:true},{t:"Judicial review",c:false},{t:"Federal reserve policy",c:false},{t:"Executive privilege",c:false}], hint:"Hint: Two chambers = two approvals.", why:"A bicameral Congress requires both House and Senate to pass legislation." },
+  { type:"mcq", tag:"CS 3–4 • Reserved powers", stimulus:"A state creates licensing requirements for barbers.", stem:"This is most likely an example of:", choices:[{t:"Reserved powers",c:true},{t:"Treaty power",c:false},{t:"Coining money",c:false},{t:"Declaring war",c:false}], hint:"Hint: Police powers and licensing are typically state responsibilities.", why:"States retain many police powers, including licensing and public safety regulation." },
+  { type:"select2", tag:"CS 14 • Policy tools", stimulus:"The economy slows sharply and leaders want to increase overall demand.", stem:"Which TWO actions are expansionary tools (one fiscal, one monetary)?", choices:[{t:"Congress increases government spending",c:true},{t:"The Fed lowers interest-rate conditions",c:true},{t:"Congress raises taxes",c:false},{t:"The Fed raises rates sharply",c:false}], hint:"Hint: Expansionary = more spending/cheaper borrowing.", why:"Expansionary fiscal increases spending; expansionary monetary lowers borrowing costs." },
+  { type:"mcq", tag:"CS 9–12 • Due process", stimulus:"Government must follow fair procedures before taking away liberty.", stem:"This requirement is known as:", choices:[{t:"Due process",c:true},{t:"Extradition",c:false},{t:"Bicameralism",c:false},{t:"Federalism",c:false}], hint:"Hint: It’s a fairness requirement in legal procedures.", why:"Due process requires fair procedures before deprivation of life, liberty, or property." },
+  { type:"mcq", tag:"CS 2 • Interest groups", stimulus:"A group focuses on one issue and meets with lawmakers to promote its policy goals.", stem:"This group is best described as a:", choices:[{t:"Interest group",c:true},{t:"Judicial circuit",c:false},{t:"Electoral College",c:false},{t:"Grand jury",c:false}], hint:"Hint: One-issue advocacy + lobbying.", why:"Interest groups advocate on specific issues and lobby policymakers." },
+  { type:"select2", tag:"CS 5–8 • Legislative checks", stimulus:"Concerns arise about misuse of executive power.", stem:"Which TWO are constitutional checks the legislative branch can use?", choices:[{t:"Impeachment and removal process",c:true},{t:"Control funding through appropriations",c:true},{t:"Issue search warrants",c:false},{t:"Write majority opinions in court cases",c:false}], hint:"Hint: Money and impeachment are major legislative checks.", why:"Congress checks executive power through impeachment and the power of the purse." },
+  { type:"mcq", tag:"CS 9–12 • Equal protection", stimulus:"A law treats similarly situated people differently without sufficient justification.", stem:"Which clause is most directly involved?", choices:[{t:"Equal Protection Clause",c:true},{t:"Supremacy Clause",c:false},{t:"Commerce Clause",c:false},{t:"Establishment Clause",c:false}], hint:"Hint: It’s in the 14th Amendment and addresses equal treatment.", why:"Equal protection requires government to treat similarly situated individuals similarly." },
+  { type:"mcq", tag:"CS 15 • Diplomacy", stimulus:"The president meets with foreign leaders to negotiate agreements and reduce tensions.", stem:"This is an example of:", choices:[{t:"Diplomacy",c:true},{t:"Judicial review",c:false},{t:"Bicameralism",c:false},{t:"Incorporation",c:false}], hint:"Hint: Negotiation between nations.", why:"Diplomacy is negotiation and communication between governments." },
+  { type:"select2", tag:"CS 9–12 • 1st Amendment", stimulus:"A newspaper publishes criticism of a mayor’s policy decisions.", stem:"Which TWO freedoms most directly protect the newspaper’s action?", choices:[{t:"Freedom of the press",c:true},{t:"Freedom of speech",c:true},{t:"Right to bear arms",c:false},{t:"Protection against double jeopardy",c:false}], hint:"Hint: Publishing criticism involves communication protections.", why:"Press and speech protections cover political criticism and publication." },
+  { type:"mcq", tag:"CS 5–8 • Separation of powers", stimulus:"The Constitution divides government power among three branches.", stem:"The main purpose is to:", choices:[{t:"Prevent concentration of power and protect liberty",c:true},{t:"Ensure one branch controls all policy quickly",c:false},{t:"Eliminate elections",c:false},{t:"Require states to obey governors over federal law",c:false}], hint:"Hint: The goal is limiting power, not concentrating it.", why:"Separation of powers prevents any one branch from dominating the others." },
+  { type:"mcq", tag:"CS 13 • Midterms", stimulus:"Voters elect members of the House every two years, and some Senate seats every two years.", stem:"An election held halfway through a president’s term is called a:", choices:[{t:"Midterm election",c:true},{t:"Primary election",c:false},{t:"Runoff election",c:false},{t:"Constitutional convention",c:false}], hint:"Hint: Timing is halfway through a presidential term.", why:"Midterms occur two years into a four-year presidential term." },
+  { type:"select2", tag:"CS 5–8 • Court decisions", stimulus:"A Supreme Court decision becomes guidance for later courts.", stem:"Which TWO terms best describe this influence?", choices:[{t:"Precedent",c:true},{t:"Stare decisis (following prior decisions)",c:true},{t:"Appropriations",c:false},{t:"Filibuster",c:false}], hint:"Hint: It’s about how past rulings guide future rulings.", why:"Precedent and stare decisis describe following earlier court decisions." }
+];
+
+// Ensure exactly 30
+const TARGET = 30;
+if(ITEMS.length > TARGET) ITEMS.length = TARGET;
+while(ITEMS.length < TARGET){
+  const src = ITEMS[ITEMS.length % Math.max(1, ITEMS.length)];
+  const clone = JSON.parse(JSON.stringify(src));
+  clone.tag = (clone.tag || "CS aligned") + " • Variant";
+  ITEMS.push(clone);
+}
+
+/* ============ UTIL ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function rotate(arr, k){
+  const n = arr.length;
+  const s = ((k%n)+n)%n;
+  return arr.slice(s).concat(arr.slice(0,s));
+}
+function mixedChoices(choices, seed){
+  // rotate then shuffle -> helps distribute correct letter positions across bank
+  return shuffle(rotate(choices, seed % choices.length));
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* ============ STATE ============ */
+const KEY = "LEGEND_GOV7_V1";
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tagEl = document.getElementById('tag');
+const stimulusEl = document.getElementById('stimulus');
+const typeLine = document.getElementById('typeLine');
+const stemEl = document.getElementById('stem');
+const choicesEl = document.getElementById('choices');
+
+const selectInfo = document.getElementById('selectInfo');
+const submitBtn = document.getElementById('submitBtn');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+function resetMsgs(){
+  goodMsg.style.display="none"; badMsg.style.display="none"; hintMsg.style.display="none";
+  goodMsg.textContent=""; badMsg.textContent=""; hintMsg.textContent="";
+}
+function lockChoices(lock=true){
+  choicesEl.querySelectorAll('.choice').forEach(c=> c.classList.toggle('disabled', lock));
+  submitBtn.disabled = lock;
+}
+
+/* ============ BUILD BANK ============ */
+function buildBank(){
+  const bank = shuffle(ITEMS.map(x=>JSON.parse(JSON.stringify(x))));
+  bank.forEach((it, idx)=>{
+    it.wrongRecorded = false;
+    it.answered = false;
+    it.seed = 10000 + idx*37;
+  });
+  return bank;
+}
+
+/* ============ RENDER ============ */
+let selected = []; // stores indices in current rendered order
+
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  resetMsgs();
+  selected = [];
+
+  const it = state.bank[state.idx];
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Item ${state.idx+1}`;
+  tagEl.textContent = it.tag || "OST-style • Mixer • CS aligned";
+
+  if(it.stimulus && it.stimulus.trim()){
+    stimulusEl.style.display="block";
+    stimulusEl.textContent = it.stimulus.trim();
+  }else{
+    stimulusEl.style.display="none";
+    stimulusEl.textContent = "";
+  }
+
+  stemEl.textContent = it.stem || "";
+
+  const isSelect2 = it.type === "select2";
+  typeLine.textContent = isSelect2 ? "Select TWO correct answers." : "Choose the best answer.";
+  selectInfo.textContent = isSelect2 ? "Select: 2" : "Select: 1";
+  submitBtn.style.display = isSelect2 ? "inline-block" : "none";
+  submitBtn.disabled = true;
+
+  // controlled shuffle of choices
+  const mixed = mixedChoices(it.choices.slice(), it.seed);
+  it._rendered = mixed;
+
+  choicesEl.innerHTML = "";
+  mixed.forEach((ch, i)=>{
+    const div = document.createElement('div');
+    div.className = "choice";
+    div.dataset.i = String(i);
+    div.innerHTML = `<div class="letter">${String.fromCharCode(65+i)}</div><div class="ctext">${escapeHTML(ch.t)}</div>`;
+
+    div.addEventListener('click', ()=>{
+      if(div.classList.contains('disabled')) return;
+      if(isSelect2){
+        toggleSelect(div, i);
+        submitBtn.disabled = (selected.length !== 2);
+      }else{
+        // MCQ immediate check
+        selected = [i];
+        markSelected();
+        checkAnswer();
+      }
+    });
+
+    choicesEl.appendChild(div);
+  });
+
+  lockChoices(false);
+}
+
+function toggleSelect(div, i){
+  const pos = selected.indexOf(i);
+  if(pos >= 0){
+    selected.splice(pos, 1);
+  }else{
+    if(selected.length >= 2) return;
+    selected.push(i);
+  }
+  markSelected();
+}
+function markSelected(){
+  choicesEl.querySelectorAll('.choice').forEach(c=>{
+    const i = Number(c.dataset.i);
+    c.classList.toggle('selected', selected.includes(i));
+  });
+}
+
+/* ============ SUBMIT (select2) ============ */
+submitBtn.addEventListener('click', ()=>{
+  const it = state.bank[state.idx];
+  if(it.type !== "select2") return;
+  if(selected.length !== 2) return;
+  checkAnswer();
+});
+
+/* ============ CHECK / ADVANCE ============ */
+function checkAnswer(){
+  const it = state.bank[state.idx];
+  const rendered = it._rendered || it.choices;
+  const correctIdx = [];
+  rendered.forEach((c, i)=>{ if(c.c) correctIdx.push(i); });
+
+  state.attempts += 1;
+
+  let ok = false;
+  if(it.type === "mcq"){
+    ok = (selected.length===1 && correctIdx.length===1 && selected[0]===correctIdx[0]);
+  }else{
+    const a = selected.slice().sort((x,y)=>x-y);
+    const b = correctIdx.slice().sort((x,y)=>x-y);
+    ok = (a.length===2 && b.length===2 && a[0]===b[0] && a[1]===b[1]);
+  }
+
+  if(ok){
+    lockChoices(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = "Correct.";
+    if(it.why){
+      const extra = document.createElement('div');
+      extra.className="small";
+      extra.style.marginTop="6px";
+      extra.textContent = it.why;
+      goodMsg.appendChild(extra);
+    }
+
+    it.answered = true;
+    save();
+
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        save();
+        render();
+      }
+    }, 1200);
+
+  }else{
+    if(!it.wrongRecorded){
+      it.wrongRecorded = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = "Incorrect. A miss has been recorded. Use the hint and try again.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = it.hint || "Hint: Re-read the stimulus and identify which branch/power/right matches the question.";
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+    save();
+  }
+}
+
+/* ============ FINISH ============ */
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  lockChoices(true);
+}
+
+/* ============ START / BOOT ============ */
+function startNew(name){
+  const startAt = Date.now();
+  state = {
+    version:"GOV7_V1",
+    gameTitle:"Gov Game 7 — OST Simulation Mixer (Mastery)",
+    name,
+    startAt,
+    endAt:null,
+    idx:0,
+    bank: buildBank(),
+    misses:0,
+    attempts:0,
+    finished:false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+
+  render();
+}
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    nameInput.focus();
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV7_V1"){
+    state = existing;
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
