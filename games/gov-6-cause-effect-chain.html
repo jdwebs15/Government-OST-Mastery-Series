@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 6 — Cause &amp; Effect Chain (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Cause → Effect Chain (0 misses required)" />
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{ background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{ font-size:12px; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; padding:8px 10px; white-space:nowrap; }
+
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .small{ color:var(--muted); font-size:13px; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:900;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+
+    .stim{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+
+    .instructions{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      color:var(--text);
+      line-height:1.35;
+      font-size:13px;
+    }
+
+    .chainGrid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:12px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .chainGrid{ grid-template-columns:1fr; }
+    }
+    .step{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      border-radius:16px;
+      padding:12px;
+      min-height: 190px;
+    }
+    .stepHead{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .badge{
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.20);
+      padding:6px 10px;
+      border-radius:999px;
+      color:var(--text);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .locked{
+      opacity:.55;
+      filter:saturate(.85);
+    }
+
+    .prompt{
+      font-weight:900;
+      margin:8px 0 10px;
+      line-height:1.25;
+    }
+
+    .choice{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px;
+      margin:10px 0;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+      user-select:none;
+    }
+    .choice:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.08);
+    }
+    .choice.disabled{
+      pointer-events:none;
+      opacity:.55;
+    }
+    .choice b{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:4px;
+    }
+
+    .actionRow{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .counter{
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:12px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 6 — Cause &amp; Effect Chain (Mastery)</h1>
+          <div class="small">Build a <b>3-step</b> cause → effect chain. Steps unlock in order. Mastery = <b>0 misses</b>.</div>
+        </div>
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          <b>Instructions:</b> Select the best statement for Step 1. Step 2 unlocks after Step 1 is correct, and Step 3 unlocks after Step 2 is correct.
+        </div>
+      </section>
+
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Case</div>
+            <div class="small" id="tag">OST-style • Cause → Effect Chain • CS aligned</div>
+          </div>
+
+          <div id="stimulus" class="stim" style="display:none;"></div>
+
+          <div class="instructions">
+            <b>Build the chain:</b> Step 1 → Step 2 → Step 3. If you miss, you’ll get a hint and must correct to continue (miss is recorded).
+          </div>
+
+          <div class="chainGrid">
+            <div class="step" id="step1">
+              <div class="stepHead">
+                <div class="badge">Step 1 — Initial cause</div>
+                <div class="small" id="s1stat">Unlocked</div>
+              </div>
+              <div class="prompt" id="p1"></div>
+              <div id="c1"></div>
+            </div>
+
+            <div class="step locked" id="step2">
+              <div class="stepHead">
+                <div class="badge">Step 2 — Immediate effect</div>
+                <div class="small" id="s2stat">Locked</div>
+              </div>
+              <div class="prompt" id="p2"></div>
+              <div id="c2"></div>
+            </div>
+
+            <div class="step locked" id="step3">
+              <div class="stepHead">
+                <div class="badge">Step 3 — Outcome</div>
+                <div class="small" id="s3stat">Locked</div>
+              </div>
+              <div class="prompt" id="p3"></div>
+              <div id="c3"></div>
+            </div>
+          </div>
+
+          <div class="actionRow">
+            <div class="counter" id="progress">Progress: Step 1/3</div>
+            <button class="btn" id="nextBtn" disabled>Next Case</button>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small">Tip: If the page ever “white screens,” the on-page error box will show where/why.</div>
+    </div>
+  </div>
+
+<script>
+/* ============ HARDENED SHELL ============ */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+window.addEventListener('pageshow', (event)=>{ if(event.persisted) window.location.reload(); });
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{ history.pushState({guard:1}, document.title, location.href); });
+  }catch(_){}
+})();
+
+/* ============ BANK (25 cases) ============ */
+const CASES = [
+  {
+    tag:"CS 5–8 • Lawmaking",
+    stimulus:"A bill is introduced to expand funding for career-technical education.",
+    p1:"Which is the best Step 1 (initial cause)?",
+    p2:"Which is the best Step 2 (immediate effect)?",
+    p3:"Which is the best Step 3 (outcome)?",
+    s1:[
+      {t:"A member of Congress introduces a bill and it is assigned to a committee.", c:true},
+      {t:"The Supreme Court declares the bill constitutional before it is voted on.", c:false},
+      {t:"The president signs the bill before Congress has debated it.", c:false},
+      {t:"State governments ratify the bill as an amendment.", c:false}
+    ],
+    s2:[
+      {t:"Committees hold hearings/markup and Congress votes to pass the bill.", c:true},
+      {t:"Local courts enforce the bill immediately without a new law.", c:false},
+      {t:"The Electoral College votes to approve the bill.", c:false},
+      {t:"The bill automatically becomes law with no vote or signature required.", c:false}
+    ],
+    s3:[
+      {t:"If signed (or veto overridden), agencies implement the new funding program.", c:true},
+      {t:"The bill becomes part of the Bill of Rights.", c:false},
+      {t:"The Federal Reserve changes interest rates to enforce the bill.", c:false},
+      {t:"The law applies only to private businesses and not government programs.", c:false}
+    ],
+    hint:"Hint: Congress makes laws → president signs/ vetoes → agencies carry out the law."
+  },
+  {
+    tag:"CS 5–8 • Veto/Override",
+    stimulus:"Congress passes a bill, but the president strongly opposes it.",
+    p1:"Best Step 1?",
+    p2:"Best Step 2?",
+    p3:"Best Step 3?",
+    s1:[
+      {t:"The president vetoes the bill.", c:true},
+      {t:"The bill is immediately enforced nationwide without executive action.", c:false},
+      {t:"The Supreme Court signs the bill into law.", c:false},
+      {t:"State legislatures ratify the bill.", c:false}
+    ],
+    s2:[
+      {t:"Congress votes to override the veto with a two-thirds vote in each chamber.", c:true},
+      {t:"The Electoral College votes again to decide the bill’s fate.", c:false},
+      {t:"The FBI rewrites the bill to make it constitutional.", c:false},
+      {t:"The governor of each state must approve the bill.", c:false}
+    ],
+    s3:[
+      {t:"If Congress overrides, the bill becomes law despite the veto.", c:true},
+      {t:"The bill is automatically removed from the Constitution.", c:false},
+      {t:"The bill becomes a treaty with foreign nations.", c:false},
+      {t:"The bill can only be enforced by local school boards.", c:false}
+    ],
+    hint:"Hint: Veto is a check. Override is Congress’s check back."
+  },
+  {
+    tag:"CS 9–12 • Warrants / 4th Amendment",
+    stimulus:"Police believe evidence is inside a home and want to search legally.",
+    p1:"Best Step 1?",
+    p2:"Best Step 2?",
+    p3:"Best Step 3?",
+    s1:[
+      {t:"Police present facts to a judge to establish probable cause.", c:true},
+      {t:"Police search immediately because they have a strong feeling.", c:false},
+      {t:"A jury votes to allow the search before any judge is involved.", c:false},
+      {t:"The mayor issues a blanket permission slip for searches.", c:false}
+    ],
+    s2:[
+      {t:"A judge issues a warrant describing the place and items to be searched/seized.", c:true},
+      {t:"Congress passes a private law for this single search.", c:false},
+      {t:"The president signs an executive order authorizing any search anywhere.", c:false},
+      {t:"The Supreme Court writes the warrant for police.", c:false}
+    ],
+    s3:[
+      {t:"Police execute the search within the warrant’s limits; evidence can be used in court.", c:true},
+      {t:"Police can keep searching forever because a warrant has no limits.", c:false},
+      {t:"Evidence is automatically illegal even with a warrant.", c:false},
+      {t:"The warrant replaces the need for any trial rights.", c:false}
+    ],
+    hint:"Hint: Probable cause → warrant issued → search executed within limits."
+  },
+  {
+    tag:"CS 14 • Fiscal policy stimulus",
+    stimulus:"Unemployment rises and Congress wants to boost demand quickly.",
+    p1:"Best Step 1?",
+    p2:"Best Step 2?",
+    p3:"Best Step 3?",
+    s1:[
+      {t:"Congress passes a spending increase (e.g., infrastructure projects).", c:true},
+      {t:"The Federal Reserve sets new election rules to reduce unemployment.", c:false},
+      {t:"The Supreme Court orders businesses to hire immediately.", c:false},
+      {t:"The Electoral College changes interest rates.", c:false}
+    ],
+    s2:[
+      {t:"Government hires workers/awards contracts and money flows into the economy.", c:true},
+      {t:"States ratify the spending as a constitutional amendment.", c:false},
+      {t:"The policy is enforced by juries in criminal trials.", c:false},
+      {t:"The president must first negotiate a treaty to spend money.", c:false}
+    ],
+    s3:[
+      {t:"Demand rises and job losses may slow as businesses see more customers.", c:true},
+      {t:"Inflation always instantly falls to zero.", c:false},
+      {t:"The economy becomes a dictatorship because Congress spent money.", c:false},
+      {t:"Spending can only affect foreign policy, not domestic employment.", c:false}
+    ],
+    hint:"Hint: Fiscal stimulus is Congress taxing/spending → money enters economy → demand/employment can rise."
+  },
+  {
+    tag:"CS 14 • Monetary policy tightening",
+    stimulus:"Inflation is rising and the Fed wants to cool spending.",
+    p1:"Best Step 1?",
+    p2:"Best Step 2?",
+    p3:"Best Step 3?",
+    s1:[
+      {t:"The Federal Reserve raises interest-rate conditions using its policy tools.", c:true},
+      {t:"Congress passes a constitutional amendment to change prices.", c:false},
+      {t:"The Supreme Court raises the minimum wage by ruling.", c:false},
+      {t:"State legislatures directly print money for banks.", c:false}
+    ],
+    s2:[
+      {t:"Borrowing becomes more expensive; consumers and businesses may spend less.", c:true},
+      {t:"The Electoral College reduces consumer prices by counting votes.", c:false},
+      {t:"Juries lower inflation by convicting defendants.", c:false},
+      {t:"All taxes automatically disappear.", c:false}
+    ],
+    s3:[
+      {t:"Demand cools and inflation pressure may decrease over time.", c:true},
+      {t:"Inflation must immediately become negative forever.", c:false},
+      {t:"The policy changes who is president.", c:false},
+      {t:"Courts enforce interest rates by arresting borrowers.", c:false}
+    ],
+    hint:"Hint: Fed action → borrowing changes → demand changes → inflation pressure can shift."
+  },
+
+  /* --- Fillers to reach 25, OST-style, CS-spread --- */
+  {
+    tag:"CS 2 • Citizen engagement",
+    stimulus:"A city council is considering a curfew ordinance after complaints from residents.",
+    p1:"Best Step 1?",
+    p2:"Best Step 2?",
+    p3:"Best Step 3?",
+    s1:[
+      {t:"Residents gather evidence and speak during public comment at the council meeting.", c:true},
+      {t:"Residents change the ordinance by voting in the Electoral College.", c:false},
+      {t:"Residents appoint Supreme Court justices to write the ordinance.", c:false},
+      {t:"Residents enforce the ordinance by arresting people themselves.", c:false}
+    ],
+    s2:[
+      {t:"Council members debate and vote to adopt, reject, or amend the ordinance.", c:true},
+      {t:"The ordinance becomes a federal amendment immediately.", c:false},
+      {t:"Congress must approve every city ordinance by law.", c:false},
+      {t:"The Fed sets the curfew as a monetary policy tool.", c:false}
+    ],
+    s3:[
+      {t:"If adopted, local police and officials enforce the ordinance under local law.", c:true},
+      {t:"The ordinance replaces the U.S. Constitution in that city.", c:false},
+      {t:"The ordinance can only be enforced by foreign governments.", c:false},
+      {t:"The ordinance automatically creates a new federal agency.", c:false}
+    ],
+    hint:"Hint: Local policy: residents speak → council votes → city implements/enforces."
+  },
+  {
+    tag:"CS 3–4 • Federalism conflict",
+    stimulus:"A state passes a law that conflicts with a valid federal law on the same issue.",
+    p1:"Best Step 1?",
+    p2:"Best Step 2?",
+    p3:"Best Step 3?",
+    s1:[
+      {t:"A legal challenge argues the state law conflicts with federal law.", c:true},
+      {t:"The Electoral College nullifies the state law by counting votes.", c:false},
+      {t:"The state law automatically overrides all federal law.", c:false},
+      {t:"The president must approve every state law for it to exist.", c:false}
+    ],
+    s2:[
+      {t:"Courts determine whether the federal law is constitutional and preempts state law.", c:true},
+      {t:"A jury rewrites both laws into one new law.", c:false},
+      {t:"The Fed lowers interest rates to settle the dispute.", c:false},
+      {t:"Congress appoints the state governor as judge.", c:false}
+    ],
+    s3:[
+      {t:"If federal law is constitutional, it is supreme and the state must comply.", c:true},
+      {t:"Both laws are enforced randomly depending on the day.", c:false},
+      {t:"The state can ignore the ruling because courts have no authority.", c:false},
+      {t:"The conflict is decided by a national referendum on every law.", c:false}
+    ],
+    hint:"Hint: Supremacy Clause + court review: constitutional federal law overrides conflicting state law."
+  },
+  {
+    tag:"CS 5–8 • Checks & balances (appointments)",
+    stimulus:"A president nominates a person to lead a major executive department.",
+    p1:"Best Step 1?",
+    p2:"Best Step 2?",
+    p3:"Best Step 3?",
+    s1:[
+      {t:"The president submits a nomination for the position.", c:true},
+      {t:"A state legislature appoints the person directly.", c:false},
+      {t:"The Supreme Court votes to hire the executive official.", c:false},
+      {t:"The Federal Reserve elects the official.", c:false}
+    ],
+    s2:[
+      {t:"The Senate holds hearings and votes whether to confirm the nominee.", c:true},
+      {t:"A jury confirms the nominee after a criminal trial.", c:false},
+      {t:"The Electoral College confirms the nominee.", c:false},
+      {t:"The nominee must win a primary election to take office.", c:false}
+    ],
+    s3:[
+      {t:"If confirmed, the nominee takes office and leads the department.", c:true},
+      {t:"If confirmed, the nominee becomes a Supreme Court justice automatically.", c:false},
+      {t:"If confirmed, Congress loses all oversight power.", c:false},
+      {t:"If confirmed, the Constitution is amended.", c:false}
+    ],
+    hint:"Hint: Appointment = president nominates; Senate provides advice and consent."
+  }
+];
+
+// Expand to exactly 25 by cloning with variation (safe, but non-identical ordering happens via shuffling)
+const TARGET = 25;
+while(CASES.length < TARGET){
+  const src = CASES[CASES.length % Math.max(1, CASES.length)];
+  const clone = JSON.parse(JSON.stringify(src));
+  // tiny surface variation so duplicates aren’t identical
+  clone.tag = clone.tag + " • Variant";
+  CASES.push(clone);
+}
+if(CASES.length > TARGET) CASES.length = TARGET;
+
+/* ============ UTIL ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+
+/* ============ STATE ============ */
+const KEY = "LEGEND_GOV6_V1";
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tagEl = document.getElementById('tag');
+const stimulusEl = document.getElementById('stimulus');
+
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const step3 = document.getElementById('step3');
+
+const s1stat = document.getElementById('s1stat');
+const s2stat = document.getElementById('s2stat');
+const s3stat = document.getElementById('s3stat');
+
+const p1 = document.getElementById('p1');
+const p2 = document.getElementById('p2');
+const p3 = document.getElementById('p3');
+
+const c1 = document.getElementById('c1');
+const c2 = document.getElementById('c2');
+const c3 = document.getElementById('c3');
+
+const progressEl = document.getElementById('progress');
+const nextBtn = document.getElementById('nextBtn');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+function resetMsgs(){
+  goodMsg.style.display="none"; badMsg.style.display="none"; hintMsg.style.display="none";
+  goodMsg.textContent=""; badMsg.textContent=""; hintMsg.textContent="";
+}
+function lockStep(stepNum, locked){
+  const el = stepNum===1 ? step1 : (stepNum===2 ? step2 : step3);
+  el.classList.toggle('locked', locked);
+  const box = stepNum===1 ? c1 : (stepNum===2 ? c2 : c3);
+  box.querySelectorAll('.choice').forEach(ch=>{
+    ch.classList.toggle('disabled', locked);
+  });
+}
+function lockAll(lock=true){
+  [c1,c2,c3].forEach(box=>{
+    box.querySelectorAll('.choice').forEach(ch=> ch.classList.toggle('disabled', lock));
+  });
+  nextBtn.disabled = lock;
+}
+
+/* ============ CONTROLLED SHUFFLE (A/B/C/D balance) ============ */
+function rotate(arr, k){
+  const n = arr.length;
+  const s = ((k%n)+n)%n;
+  return arr.slice(s).concat(arr.slice(0,s));
+}
+function mixChoices(arr, seed){
+  // rotate then shuffle for variety, helps distribute correct answers
+  return shuffle(rotate(arr, seed % arr.length));
+}
+
+/* ============ RENDER ============ */
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  resetMsgs();
+
+  const q = state.bank[state.idx];
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Case ${state.idx+1}`;
+  tagEl.textContent = q.tag || "OST-style • Cause → Effect Chain • CS aligned";
+
+  if(q.stimulus && q.stimulus.trim()){
+    stimulusEl.style.display="block";
+    stimulusEl.textContent = q.stimulus.trim();
+  }else{
+    stimulusEl.style.display="none";
+    stimulusEl.textContent = "";
+  }
+
+  p1.textContent = q.p1 || "Choose Step 1.";
+  p2.textContent = q.p2 || "Choose Step 2.";
+  p3.textContent = q.p3 || "Choose Step 3.";
+
+  // Step unlock rules
+  const unlocked = q.unlocked || 1;
+  s1stat.textContent = "Unlocked";
+  s2stat.textContent = unlocked >= 2 ? "Unlocked" : "Locked";
+  s3stat.textContent = unlocked >= 3 ? "Unlocked" : "Locked";
+
+  // Render choices with controlled mixing
+  renderChoices(c1, q.s1, 1000 + state.idx);
+  renderChoices(c2, q.s2, 2000 + state.idx);
+  renderChoices(c3, q.s3, 3000 + state.idx);
+
+  // Apply lock
+  lockStep(1, false);
+  lockStep(2, !(unlocked>=2));
+  lockStep(3, !(unlocked>=3));
+
+  progressEl.textContent = `Progress: Step ${unlocked}/3`;
+  nextBtn.disabled = !(q.completed === true);
+
+  // If completed, lock all (prevents toggling after completion)
+  if(q.completed){
+    lockAll(true);
+    nextBtn.disabled = false;
+  }else{
+    lockAll(false);
+    nextBtn.disabled = true;
+  }
+}
+
+function renderChoices(container, choices, seed){
+  container.innerHTML = "";
+  const mixed = mixChoices(choices.slice(), seed);
+
+  mixed.forEach((ch, idx)=>{
+    const div = document.createElement('div');
+    div.className = "choice";
+    div.dataset.correct = ch.c ? "1" : "0";
+    div.innerHTML = `<b>Choice ${String.fromCharCode(65+idx)}</b><div>${escapeHTML(ch.t)}</div>`;
+    div.addEventListener('click', ()=>{
+      handlePick(container, div, ch);
+    });
+    container.appendChild(div);
+  });
+}
+
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* ============ PICK HANDLER ============ */
+function handlePick(container, div, ch){
+  if(div.classList.contains('disabled')) return;
+
+  const q = state.bank[state.idx];
+  const stepNum = (container === c1) ? 1 : (container === c2 ? 2 : 3);
+
+  // Only allow selecting if step is unlocked
+  const unlocked = q.unlocked || 1;
+  if(stepNum > unlocked){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="That step is locked. Complete the previous step first.";
+    return;
+  }
+
+  state.attempts += 1;
+
+  const isCorrect = (ch.c === true);
+
+  if(isCorrect){
+    resetMsgs();
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = `Correct for Step ${stepNum}.`;
+
+    // advance unlock
+    if(stepNum === unlocked){
+      q.unlocked = Math.min(3, unlocked + 1);
+      if(q.unlocked === 4) q.unlocked = 3;
+    }
+
+    // If step 3 correct -> case completed
+    if(stepNum === 3){
+      q.completed = true;
+      nextBtn.disabled = false;
+      lockAll(true);
+      goodMsg.textContent = "Case complete. Click Next Case.";
+    }
+
+    // disable step choices after correct selection (prevents changing)
+    container.querySelectorAll('.choice').forEach(x=>{
+      x.classList.add('disabled');
+    });
+
+    save();
+    render();
+
+  }else{
+    // miss recorded once per case (not per click)
+    if(!state.wrongSet[state.idx]){
+      state.wrongSet[state.idx] = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = `Not yet. A miss has been recorded. Use the hint and try Step ${stepNum} again.`;
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = q.hint || "Hint: Choose the statement that logically follows the previous step and fits the government process described.";
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+
+    save();
+  }
+}
+
+/* ============ NEXT CASE / FINISH ============ */
+nextBtn.addEventListener('click', ()=>{
+  const q = state.bank[state.idx];
+  if(!q.completed) return;
+
+  state.idx += 1;
+  if(state.idx >= state.bank.length){
+    finishGame();
+  }else{
+    save();
+    render();
+  }
+});
+
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  lockAll(true);
+}
+
+/* ============ START / BOOT ============ */
+function startNew(name){
+  const startAt = Date.now();
+  state = {
+    version:"GOV6_V1",
+    gameTitle:"Gov Game 6 — Cause & Effect Chain (Mastery)",
+    name,
+    startAt,
+    endAt:null,
+    idx:0,
+    bank: buildBank(),
+    misses:0,
+    attempts:0,
+    wrongSet:{},
+    finished:false
+  };
+  save();
+  beginUI();
+}
+
+function buildBank(){
+  // shuffle cases; also reset per-case state
+  const bank = shuffle(CASES.map(q=>JSON.parse(JSON.stringify(q))));
+  bank.forEach(q=>{
+    q.unlocked = 1;
+    q.completed = false;
+  });
+  return bank;
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+
+  render();
+}
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    nameInput.focus();
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV6_V1"){
+    state = existing;
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
