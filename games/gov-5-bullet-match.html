@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 5 — Bullet Match (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Bullet Match (0 misses required)" />
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{ background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{ font-size:12px; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; padding:8px 10px; white-space:nowrap; }
+
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .small{ color:var(--muted); font-size:13px; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:800;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+
+    .stim{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+
+    .instructions{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      color:var(--text);
+      line-height:1.35;
+      font-size:13px;
+    }
+
+    .matchGrid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .lineItem{
+      display:grid;
+      grid-template-columns: 1fr minmax(240px, 360px);
+      gap:10px;
+      align-items:start;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      border-radius:14px;
+      padding:12px;
+    }
+    @media (max-width: 860px){
+      .lineItem{ grid-template-columns:1fr; }
+    }
+    .bullet{
+      font-weight:800;
+      line-height:1.35;
+    }
+    .picker{
+      width:100%;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      font-weight:900;
+      outline:none;
+    }
+    .picker:focus{ border-color:rgba(122,162,255,.45); }
+
+    .actionRow{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .counter{
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:12px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 5 — Bullet Match (Mastery)</h1>
+          <div class="small">Match each bullet to the correct term/idea. Mastery = <b>0 misses</b>. Wrong → hint → must correct to move on.</div>
+        </div>
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          <b>Instructions:</b> Use the dropdown next to each bullet to match it to the correct term. You must use each term once.
+        </div>
+      </section>
+
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Question</div>
+            <div class="small" id="tag">OST-style • Bullet Match • CS aligned</div>
+          </div>
+
+          <div id="stimulus" class="stim" style="display:none;"></div>
+
+          <div class="instructions">
+            Match each bullet to the correct term/idea using the dropdowns. <b>Each term should be used once.</b>
+            <br><span class="small">Mastery rule: a wrong submit records a miss; you must correct to move on.</span>
+          </div>
+
+          <div class="matchGrid" id="matchGrid"></div>
+
+          <div class="actionRow">
+            <div class="counter" id="selCount">Completed: 0/4</div>
+            <button class="btn" id="submitBtn">Submit</button>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small">Tip: If the page ever “white screens,” the on-page error box will show where/why.</div>
+    </div>
+  </div>
+
+<script>
+/* ============ HARDENED SHELL ============ */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+window.addEventListener('pageshow', (event)=>{ if(event.persisted) window.location.reload(); });
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{ history.pushState({guard:1}, document.title, location.href); });
+  }catch(_){}
+})();
+
+/* ============ QUESTION BANK (25 items) ============ */
+const RAW = [
+  {
+    tag:"CS 5–8 • Separation of powers",
+    stimulus:"Match each bullet to the correct constitutional principle.",
+    terms:["Legislative branch","Executive branch","Judicial branch","Separation of powers"],
+    bullets:[
+      {text:"Makes laws and controls taxation/spending", ans:"Legislative branch"},
+      {text:"Carries out/enforces laws and directs federal agencies", ans:"Executive branch"},
+      {text:"Interprets laws and decides cases", ans:"Judicial branch"},
+      {text:"Divides responsibilities so power is not concentrated", ans:"Separation of powers"}
+    ],
+    hint:"Hint: One term is a concept (division of roles); three terms are branches with core duties."
+  },
+  {
+    tag:"CS 5–8 • Checks and balances",
+    stimulus:"Match each bullet to the correct check on power.",
+    terms:["Veto","Override veto","Judicial review","Senate confirmation"],
+    bullets:[
+      {text:"President rejects a bill passed by Congress", ans:"Veto"},
+      {text:"Congress passes a bill into law despite a president’s veto", ans:"Override veto"},
+      {text:"Courts can invalidate laws that conflict with the Constitution", ans:"Judicial review"},
+      {text:"Senate approves certain presidential appointments", ans:"Senate confirmation"}
+    ],
+    hint:"Hint: Two are Congress vs president; one is courts; one is Senate on appointments."
+  },
+  {
+    tag:"CS 3–4 • Principles",
+    stimulus:"Match each bullet to the correct principle of U.S. government.",
+    terms:["Popular sovereignty","Limited government","Federalism","Rule of law"],
+    bullets:[
+      {text:"Government gets authority from the people", ans:"Popular sovereignty"},
+      {text:"Government power is restricted by the Constitution and rights protections", ans:"Limited government"},
+      {text:"Power is divided between national and state governments", ans:"Federalism"},
+      {text:"Everyone, including leaders, must follow the law", ans:"Rule of law"}
+    ],
+    hint:"Hint: Think: who holds power, how far it goes, where it is located, and who must obey laws."
+  },
+  {
+    tag:"CS 9–12 • Rights (criminal procedure)",
+    stimulus:"Match each bullet to the correct constitutional protection.",
+    terms:["Fourth Amendment","Fifth Amendment","Sixth Amendment","Eighth Amendment"],
+    bullets:[
+      {text:"Protects against unreasonable searches and requires warrants based on probable cause", ans:"Fourth Amendment"},
+      {text:"Protects against self-incrimination and double jeopardy", ans:"Fifth Amendment"},
+      {text:"Guarantees rights in criminal prosecutions such as counsel and jury trial", ans:"Sixth Amendment"},
+      {text:"Limits cruel and unusual punishments", ans:"Eighth Amendment"}
+    ],
+    hint:"Hint: Search/warrants = 4th; silence/double jeopardy = 5th; trial rights = 6th; punishment limits = 8th."
+  },
+  {
+    tag:"CS 9–12 • First Amendment",
+    stimulus:"Match each bullet to the correct First Amendment freedom.",
+    terms:["Speech","Press","Religion","Assembly/Petition"],
+    bullets:[
+      {text:"Protects the right to criticize government without censorship", ans:"Speech"},
+      {text:"Protects newspapers and journalists from prior restraint in many situations", ans:"Press"},
+      {text:"Protects free exercise and prevents government establishment of religion", ans:"Religion"},
+      {text:"Protects peaceful protests and requesting government action", ans:"Assembly/Petition"}
+    ],
+    hint:"Hint: Two are communication; one is faith; one is protesting/asking government to act."
+  },
+  {
+    tag:"CS 14 • Fiscal vs Monetary policy",
+    stimulus:"Match each bullet to the correct policy tool.",
+    terms:["Fiscal—spending","Fiscal—taxes","Monetary—interest rates","Monetary—money supply"],
+    bullets:[
+      {text:"Congress increases government purchases (e.g., infrastructure) to stimulate demand", ans:"Fiscal—spending"},
+      {text:"Government changes tax rates or credits to influence consumer spending", ans:"Fiscal—taxes"},
+      {text:"The Federal Reserve raises or lowers borrowing costs to cool or stimulate the economy", ans:"Monetary—interest rates"},
+      {text:"The Federal Reserve uses tools to increase or decrease liquidity in the banking system", ans:"Monetary—money supply"}
+    ],
+    hint:"Hint: Fiscal = Congress/taxes/spending. Monetary = Fed/credit conditions and liquidity."
+  },
+  {
+    tag:"CS 13 • Electoral College / amendments",
+    stimulus:"Match each bullet to the correct term or amendment.",
+    terms:["Electoral College","12th Amendment","22nd Amendment","25th Amendment"],
+    bullets:[
+      {text:"System where electors cast votes that determine the president", ans:"Electoral College"},
+      {text:"Requires separate electoral votes for president and vice president", ans:"12th Amendment"},
+      {text:"Limits a president to two elected terms (with limited exceptions)", ans:"22nd Amendment"},
+      {text:"Establishes procedures for presidential disability and succession", ans:"25th Amendment"}
+    ],
+    hint:"Hint: One is the election system; three are amendments changing presidential procedures."
+  },
+  {
+    tag:"CS 15 • Foreign policy powers",
+    stimulus:"Match each bullet to the correct power or process.",
+    terms:["Treaty","Advice and consent","Commander in chief","Diplomacy"],
+    bullets:[
+      {text:"Formal agreement between the U.S. and another nation", ans:"Treaty"},
+      {text:"Senate approval required for certain presidential actions like treaties", ans:"Advice and consent"},
+      {text:"President’s role leading the armed forces", ans:"Commander in chief"},
+      {text:"Negotiation and communication with foreign governments", ans:"Diplomacy"}
+    ],
+    hint:"Hint: One is the document; one is Senate’s role; one is military leadership; one is negotiation."
+  },
+  {
+    tag:"CS 2 • Civic participation tools",
+    stimulus:"Match each bullet to the correct method of civic engagement.",
+    terms:["Voting","Petitioning","Contacting officials","Public comment"],
+    bullets:[
+      {text:"Choosing leaders in an election", ans:"Voting"},
+      {text:"Collecting signatures to request government action", ans:"Petitioning"},
+      {text:"Calling/emailing representatives to express a position", ans:"Contacting officials"},
+      {text:"Speaking at a meeting before a board/council vote", ans:"Public comment"}
+    ],
+    hint:"Hint: One is elections, one is signatures, one is direct communication, one is meeting testimony."
+  },
+  {
+    tag:"CS 2 • Influence on public policy",
+    stimulus:"Match each bullet to the group that typically fits best.",
+    terms:["Interest group","Political party","Media","Citizen coalition"],
+    bullets:[
+      {text:"Organizes around one issue and lobbies lawmakers", ans:"Interest group"},
+      {text:"Recruits candidates and helps voters identify positions", ans:"Political party"},
+      {text:"Shapes agenda by reporting issues and influencing public attention", ans:"Media"},
+      {text:"Local residents working together to change a policy at school/city level", ans:"Citizen coalition"}
+    ],
+    hint:"Hint: One is candidate-focused; one is issue-focused; one is information/agenda; one is local group action."
+  },
+  {
+    tag:"CS 9–12 • Due process / incorporation",
+    stimulus:"Match each bullet to the correct concept.",
+    terms:["Due process","Equal protection","Incorporation","Bill of Rights"],
+    bullets:[
+      {text:"Fair procedures before government deprives life, liberty, or property", ans:"Due process"},
+      {text:"Government must treat similarly situated people similarly under the law", ans:"Equal protection"},
+      {text:"Applying many Bill of Rights protections to state governments via the 14th Amendment", ans:"Incorporation"},
+      {text:"First ten amendments protecting individual rights and limiting government", ans:"Bill of Rights"}
+    ],
+    hint:"Hint: Two are 14th Amendment ideas; one is the set of first ten amendments."
+  },
+
+  /* --- additional OST-style sets (to reach 25) --- */
+  {
+    tag:"CS 5–8 • Lawmaking details",
+    stimulus:"Match each bullet to the correct part of the process.",
+    terms:["Committee work","Conference committee","Executive signature","Implementation"],
+    bullets:[
+      {text:"Small groups in Congress revise bills, hold hearings, and mark up legislation", ans:"Committee work"},
+      {text:"House and Senate resolve differences between two versions of a bill", ans:"Conference committee"},
+      {text:"Final step that can approve a bill into law (unless veto/override)", ans:"Executive signature"},
+      {text:"Agencies create rules and carry out the law after passage", ans:"Implementation"}
+    ],
+    hint:"Hint: Think: refine, reconcile, sign, then carry out."
+  },
+  {
+    tag:"CS 5–8 • Courts",
+    stimulus:"Match each bullet to the correct court concept.",
+    terms:["Original jurisdiction","Appellate jurisdiction","Precedent","Majority opinion"],
+    bullets:[
+      {text:"Court hears a case first rather than on appeal", ans:"Original jurisdiction"},
+      {text:"Court reviews decisions from lower courts", ans:"Appellate jurisdiction"},
+      {text:"Prior court decisions that guide future rulings", ans:"Precedent"},
+      {text:"Explanation of the Court’s decision agreed to by most justices", ans:"Majority opinion"}
+    ],
+    hint:"Hint: First hearing vs review; past guidance; official reasoning."
+  },
+  {
+    tag:"CS 3 • Limits on power",
+    stimulus:"Match each bullet to the best term.",
+    terms:["Enumerated powers","Reserved powers","Concurrent powers","Supremacy Clause"],
+    bullets:[
+      {text:"Powers specifically listed for the national government in the Constitution", ans:"Enumerated powers"},
+      {text:"Powers kept by states or the people (10th Amendment concept)", ans:"Reserved powers"},
+      {text:"Powers shared by national and state governments (e.g., taxing)", ans:"Concurrent powers"},
+      {text:"Federal law is supreme when constitutional and conflicts with state law", ans:"Supremacy Clause"}
+    ],
+    hint:"Hint: Listed, kept, shared, and highest law."
+  },
+  {
+    tag:"CS 1–2 • Civic literacy",
+    stimulus:"Match each bullet to the correct term.",
+    terms:["Public policy","Law","Regulation","Ordinance"],
+    bullets:[
+      {text:"Binding rule enforced by government", ans:"Law"},
+      {text:"Institutional actions and procedures governments pursue to carry out functions", ans:"Public policy"},
+      {text:"Agency rule explaining how a law will be applied", ans:"Regulation"},
+      {text:"Local law passed by a city or town", ans:"Ordinance"}
+    ],
+    hint:"Hint: Local law has its own word; agency rules are regulations."
+  },
+  {
+    tag:"CS 14 • Stabilization policy",
+    stimulus:"Match each bullet to the correct economic term.",
+    terms:["Inflation","Recession","Automatic stabilizer","Discretionary fiscal policy"],
+    bullets:[
+      {text:"General rise in prices over time", ans:"Inflation"},
+      {text:"Significant decline in economic activity and rising unemployment", ans:"Recession"},
+      {text:"Programs that increase spending or reduce taxes automatically when the economy slows", ans:"Automatic stabilizer"},
+      {text:"Deliberate congressional decisions to change spending/taxes", ans:"Discretionary fiscal policy"}
+    ],
+    hint:"Hint: Automatic happens without a new vote; discretionary requires a new decision."
+  },
+  {
+    tag:"CS 9–12 • Protections in court",
+    stimulus:"Match each bullet to the right constitutional idea.",
+    terms:["Speedy trial","Public trial","Impartial jury","Confrontation clause"],
+    bullets:[
+      {text:"Limits government from delaying prosecution unfairly", ans:"Speedy trial"},
+      {text:"Proceedings are open to the public to reduce abuse", ans:"Public trial"},
+      {text:"Jurors should not have bias toward either side", ans:"Impartial jury"},
+      {text:"Defendant can question witnesses against them", ans:"Confrontation clause"}
+    ],
+    hint:"Hint: Fast, open, fair jurors, and face/question witnesses."
+  },
+  {
+    tag:"CS 15 • Congress & foreign affairs",
+    stimulus:"Match each bullet to the correct power.",
+    terms:["Declare war","Fund the military","Regulate commerce","Ratify treaties"],
+    bullets:[
+      {text:"Congress can formally authorize war", ans:"Declare war"},
+      {text:"Congress controls appropriations that support armed forces", ans:"Fund the military"},
+      {text:"Congress sets rules for trade with other nations", ans:"Regulate commerce"},
+      {text:"Senate approves treaties by supermajority vote", ans:"Ratify treaties"}
+    ],
+    hint:"Hint: Senate approves treaties; Congress as a whole declares war and controls money."
+  },
+  {
+    tag:"CS 2 • Elections",
+    stimulus:"Match each bullet to the correct election term.",
+    terms:["Primary election","General election","Midterm election","Runoff"],
+    bullets:[
+      {text:"Voters choose a party’s candidate for an office", ans:"Primary election"},
+      {text:"Voters choose between candidates of different parties", ans:"General election"},
+      {text:"Federal election held halfway through a president’s term", ans:"Midterm election"},
+      {text:"Second election held when no candidate meets required threshold", ans:"Runoff"}
+    ],
+    hint:"Hint: Party selection vs final contest; midterm timing; second chance election."
+  },
+  {
+    tag:"CS 5–8 • Federal courts",
+    stimulus:"Match each bullet to the correct federal court level.",
+    terms:["District court","Court of appeals","Supreme Court","Judicial circuit"],
+    bullets:[
+      {text:"Trial-level federal court where cases begin", ans:"District court"},
+      {text:"Reviews district court decisions for legal error", ans:"Court of appeals"},
+      {text:"Highest court; sets national precedent and resolves major conflicts", ans:"Supreme Court"},
+      {text:"Geographic region used to organize the appeals courts", ans:"Judicial circuit"}
+    ],
+    hint:"Hint: Trial first; then review; highest final; circuits are regions."
+  },
+  {
+    tag:"CS 3–4 • Federalism conflicts",
+    stimulus:"Match each bullet to the best term.",
+    terms:["Preemption","Concurrent power","Unfunded mandate","Grant-in-aid"],
+    bullets:[
+      {text:"Federal law overrides state law in a conflict area", ans:"Preemption"},
+      {text:"Power shared by federal and state governments (e.g., taxing)", ans:"Concurrent power"},
+      {text:"Federal requirement without providing sufficient funding", ans:"Unfunded mandate"},
+      {text:"Federal money given to states/localities for specific purposes", ans:"Grant-in-aid"}
+    ],
+    hint:"Hint: Override, shared, required-without-money, and money-to-states."
+  },
+  {
+    tag:"CS 9–12 • Speech limits",
+    stimulus:"Match each bullet to the best label.",
+    terms:["Protected speech","Time/place/manner rules","Defamation","Incitement"],
+    bullets:[
+      {text:"Most political criticism of government officials", ans:"Protected speech"},
+      {text:"Rules about when/where protests can happen (without targeting viewpoint)", ans:"Time/place/manner rules"},
+      {text:"False statements that harm a person’s reputation", ans:"Defamation"},
+      {text:"Speech intended and likely to produce imminent lawless action", ans:"Incitement"}
+    ],
+    hint:"Hint: One is generally protected; one is neutral regulation; two are categories that can be limited."
+  },
+  {
+    tag:"CS 13 • Presidential elections",
+    stimulus:"Match each bullet to the correct idea.",
+    terms:["Swing state","Winner-take-all","Faithless elector","Majority requirement"],
+    bullets:[
+      {text:"State where either party’s candidate can realistically win", ans:"Swing state"},
+      {text:"Most states award all electoral votes to the state popular vote winner", ans:"Winner-take-all"},
+      {text:"Elector who does not vote as pledged", ans:"Faithless elector"},
+      {text:"A candidate typically needs 270 electoral votes to win", ans:"Majority requirement"}
+    ],
+    hint:"Hint: Competitive states; all votes to winner; elector breaks pledge; 270 threshold."
+  },
+  {
+    tag:"CS 5–8 • Executive checks",
+    stimulus:"Match each bullet to the correct check or tool.",
+    terms:["Impeachment","Oversight hearing","Executive order","Confirmation hearing"],
+    bullets:[
+      {text:"Congress investigates and can remove officials for serious misconduct", ans:"Impeachment"},
+      {text:"Congress questions agencies about enforcement and spending", ans:"Oversight hearing"},
+      {text:"Presidential directive to executive agencies on how to carry out policy", ans:"Executive order"},
+      {text:"Senate process for evaluating major appointments", ans:"Confirmation hearing"}
+    ],
+    hint:"Hint: Two are Congress checks; one is a president tool; one is Senate evaluation."
+  }
+];
+
+// ensure exactly 25
+const TARGET = 25;
+while(RAW.length < TARGET){
+  RAW.push(JSON.parse(JSON.stringify(RAW[RAW.length % Math.max(1, RAW.length)])));
+}
+if(RAW.length > TARGET) RAW.length = TARGET;
+
+/* ============ UTIL ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+
+/* ============ CONTROLLED SHUFFLE OF TERMS (varies order each item) ============ */
+function rotate(arr, k){
+  const n = arr.length;
+  const s = ((k%n)+n)%n;
+  return arr.slice(s).concat(arr.slice(0,s));
+}
+function buildBank(){
+  const base = shuffle(RAW.map(q=>JSON.parse(JSON.stringify(q))));
+  // For each question: shuffle bullets; rotate+shuffle terms for variety
+  base.forEach((q, idx)=>{
+    q.bullets = shuffle(q.bullets);
+    const rot = rotate(q.terms, idx % q.terms.length);
+    q.termsShuf = shuffle(rot);
+    q.picks = new Array(q.bullets.length).fill("");
+  });
+  return base;
+}
+
+/* ============ STATE ============ */
+const KEY = "LEGEND_GOV5_V1";
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tagEl = document.getElementById('tag');
+const stimulusEl = document.getElementById('stimulus');
+const matchGrid = document.getElementById('matchGrid');
+const selCountEl = document.getElementById('selCount');
+const submitBtn = document.getElementById('submitBtn');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+function resetMsgs(){
+  goodMsg.style.display="none"; badMsg.style.display="none"; hintMsg.style.display="none";
+  goodMsg.textContent=""; badMsg.textContent=""; hintMsg.textContent="";
+}
+function lockUI(lock=true){
+  matchGrid.querySelectorAll('select').forEach(s=> s.disabled = lock);
+  submitBtn.disabled = lock;
+}
+
+/* ============ RENDER ============ */
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  resetMsgs();
+
+  const q = state.bank[state.idx];
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Question ${state.idx+1}`;
+  tagEl.textContent = q.tag || "OST-style • Bullet Match • CS aligned";
+
+  if(q.stimulus && q.stimulus.trim()){
+    stimulusEl.style.display="block";
+    stimulusEl.textContent = q.stimulus.trim();
+  }else{
+    stimulusEl.style.display="none";
+    stimulusEl.textContent = "";
+  }
+
+  matchGrid.innerHTML = "";
+
+  q.bullets.forEach((b, i)=>{
+    const row = document.createElement('div');
+    row.className = "lineItem";
+
+    const left = document.createElement('div');
+    left.className = "bullet";
+    left.textContent = `• ${b.text}`;
+
+    const right = document.createElement('div');
+    const sel = document.createElement('select');
+    sel.className = "picker";
+    sel.innerHTML = `<option value="">— Select a term —</option>` + q.termsShuf.map(t=>`<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join("");
+
+    // restore saved pick
+    if(q.picks[i]){
+      sel.value = q.picks[i];
+    }
+
+    sel.addEventListener('change', ()=>{
+      q.picks[i] = sel.value;
+      updateCompleted();
+      save();
+    });
+
+    right.appendChild(sel);
+
+    row.appendChild(left);
+    row.appendChild(right);
+    matchGrid.appendChild(row);
+  });
+
+  updateCompleted();
+  submitBtn.disabled = false;
+  lockUI(false);
+}
+
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function updateCompleted(){
+  const q = state.bank[state.idx];
+  const done = q.picks.filter(x=>x && x.trim()).length;
+  selCountEl.textContent = `Completed: ${done}/${q.bullets.length}`;
+}
+
+/* ============ SUBMIT CHECK ============ */
+submitBtn.addEventListener('click', ()=>{
+  if(state.finished) return;
+
+  const q = state.bank[state.idx];
+
+  // ensure all filled
+  const filled = q.picks.every(x=>x && x.trim());
+  if(!filled){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Complete all 4 matches before submitting.";
+    return;
+  }
+
+  // ensure unique usage
+  const picks = q.picks.map(x=>x.trim());
+  const set = new Set(picks);
+  if(set.size !== picks.length){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Each term must be used once. You have at least one duplicate selection.";
+    return;
+  }
+
+  state.attempts += 1;
+
+  let allCorrect = true;
+  for(let i=0;i<q.bullets.length;i++){
+    if(picks[i] !== q.bullets[i].ans) { allCorrect = false; break; }
+  }
+
+  if(allCorrect){
+    lockUI(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent="Correct matches.";
+
+    save();
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        save();
+        render();
+      }
+    }, 900);
+
+  }else{
+    if(!state.wrongSet[state.idx]){
+      state.wrongSet[state.idx] = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent="Not yet. A miss has been recorded. Use the hint, then correct your matches.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = q.hint || "Hint: Re-check the definition each bullet describes and match the term that precisely fits it.";
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+    save();
+  }
+});
+
+/* ============ FINISH ============ */
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  lockUI(true);
+}
+
+/* ============ START / BOOT ============ */
+function startNew(name){
+  const startAt = Date.now();
+  state = {
+    version:"GOV5_V1",
+    gameTitle:"Gov Game 5 — Bullet Match (Mastery)",
+    name,
+    startAt,
+    endAt:null,
+    idx:0,
+    bank: buildBank(),
+    misses:0,
+    attempts:0,
+    wrongSet:{},
+    finished:false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+
+  render();
+}
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    nameInput.focus();
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV5_V1"){
+    state = existing;
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
