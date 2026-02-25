@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gov Game 8.1 — Primary Source Snapshot PLUS (Mastery)</title>
   <link rel="stylesheet" href="../styles.css" />
-  <meta name="description" content="Ohio American Government OST Mastery — Primary Source Snapshot PLUS (tables, paired quotes, mini-charts, diagrams; 0 misses required)" />
+  <meta name="description" content="Ohio American Government OST Mastery — Primary Source Snapshot PLUS (tables, paired quotes, mini-charts; 0 misses required)" />
   <style>
     .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
     .panel{ background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
@@ -141,19 +141,6 @@
     }
     .barNote{ color:var(--muted); font-size:12px; margin-top:6px; }
 
-    .svgWrap{
-      margin-top:8px;
-      padding:10px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.14);
-    }
-    svg text{ font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; fill:#e7eefc; }
-    .svgLabel{ font-weight:800; font-size:12px; fill:#a8b4cf; letter-spacing:.08em; }
-    .svgBox{ fill: rgba(255,255,255,.06); stroke: rgba(255,255,255,.18); stroke-width: 1.2; }
-    .svgBranch{ fill: rgba(0,0,0,.18); stroke: rgba(255,255,255,.18); stroke-width: 1.2; }
-    .svgArrow{ stroke: rgba(231,238,252,.65); stroke-width: 2; marker-end:url(#arrow); }
-
     .instructions{
       margin-top:10px;
       padding:10px 12px;
@@ -264,7 +251,7 @@
         <div>
           <div class="k">LEGEND MASTERY SERIES</div>
           <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 8.1 — Primary Source Snapshot PLUS (Mastery)</h1>
-          <div class="small">Released-item style stimuli: <b>paired quotes</b>, <b>tables</b>, <b>mini-charts</b>, and <b>diagrams</b>. Mastery = <b>0 misses</b>.</div>
+          <div class="small">Released-item style stimuli: <b>paired quotes</b>, <b>tables</b>, and <b>mini-charts</b>. Mastery = <b>0 misses</b>.</div>
         </div>
         <div class="stats">
           <div class="pill2">Player: <b id="playerName">—</b></div>
@@ -313,7 +300,7 @@
           <div id="stimulus" class="stim" style="display:none;"></div>
 
           <div class="instructions">
-            <b>How to win:</b> Use the stimulus (quote/table/diagram/chart), answer the question. If you miss, you’ll get a hint and must correct to continue (miss recorded).
+            <b>How to win:</b> Use the stimulus (quote/table/chart), answer the question. If you miss, you’ll get a hint and must correct to continue (miss recorded).
           </div>
 
           <div class="stem" id="stem"></div>
@@ -378,15 +365,8 @@ window.addEventListener('pageshow', (event)=>{ if(event.persisted) window.locati
   }catch(_){}
 })();
 
-/* ========= NOTE =========
-   I can't directly pull your Word banks inside this response,
-   so items are CS-aligned and written in OST released-item style.
-   You can swap stems/choices later without changing the engine.
-========================= */
-
 /* ============ ITEM BANK (25 items) ============ */
 const ITEMS = [
-  /* 1) PAIRED QUOTES */
   {
     type:"mcq",
     tag:"CS 3–4 • Federalism / Supremacy",
@@ -408,8 +388,6 @@ const ITEMS = [
     ],
     hint:"Hint: One excerpt addresses conflicts (supreme law). The other explains what happens to powers not delegated."
   },
-
-  /* 2) TABLE STIMULUS */
   {
     type:"select2",
     tag:"CS 5–8 • Branches & Roles",
@@ -433,8 +411,6 @@ const ITEMS = [
     ],
     hint:"Hint: Identify the big structural idea shown by three branches doing different tasks."
   },
-
-  /* 3) MINI-CHART STIMULUS */
   {
     type:"mcq",
     tag:"CS 14 • Fiscal vs Monetary",
@@ -458,8 +434,6 @@ const ITEMS = [
     ],
     hint:"Hint: Focus on the number of actions shown, not “which is more important.”"
   },
-
-  /* 5) PRIMARY SOURCE SNAPSHOT w/ BEST-EXPLAINS */
   {
     type:"mcq",
     tag:"CS 9–12 • 4th Amendment",
@@ -478,8 +452,6 @@ const ITEMS = [
     ],
     hint:"Hint: The excerpt focuses on warrants and probable cause."
   },
-
-  /* 6) PAIRED QUOTES — RIGHTS + LIMITS */
   {
     type:"select2",
     tag:"CS 9–12 • 1st Amendment",
@@ -501,8 +473,6 @@ const ITEMS = [
     ],
     hint:"Hint: Look for balance: strong protection + constitutional tests for limits."
   },
-
-  /* 7) TABLE — FED vs STATE */
   {
     type:"mcq",
     tag:"CS 3–4 • Federalism",
@@ -526,8 +496,6 @@ const ITEMS = [
     ],
     hint:"Hint: The table shows different levels handling different policy areas."
   },
-
-  /* 8) MINI-CHART — ELECTIONS */
   {
     type:"mcq",
     tag:"CS 13 • Elections/Participation",
@@ -551,8 +519,6 @@ const ITEMS = [
     ],
     hint:"Hint: Compare counts—don’t over-claim what the chart can prove."
   },
-
-  /* 9) DIAGRAM-LIKE ITEM — APPELLATE */
   {
     type:"mcq",
     tag:"CS 5–8 • Judiciary",
@@ -571,8 +537,6 @@ const ITEMS = [
     ],
     hint:"Hint: Reviewing a lower court is appellate."
   },
-
-  /* 10) PAIR — MARBURY / RULE OF LAW */
   {
     type:"mcq",
     tag:"CS 5–8 • Judicial Review",
@@ -698,56 +662,6 @@ function renderStimulus(st){
       `<h3>${escapeHTML(st.title || "Mini-Chart")}</h3>
        <div class="chartRow">${lines}</div>
        ${st.note ? `<div class="barNote">${escapeHTML(st.note)}</div>` : ""}`;
-    return box;
-  }
-
-  if(st.kind === "checksDiagram"){
-    box.innerHTML =
-      `<h3>Checks and Balances Diagram</h3>
-       <div class="svgWrap">
-         <svg viewBox="0 0 920 360" width="100%" height="auto" role="img" aria-label="Checks and balances diagram">
-           <defs>
-             <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-               <path d="M0,0 L10,3 L0,6 Z" fill="rgba(231,238,252,.65)"></path>
-             </marker>
-           </defs>
-
-           <!-- Branch boxes -->
-           <rect class="svgBranch" x="360" y="18" width="200" height="54" rx="12"></rect>
-           <text x="460" y="52" text-anchor="middle" font-weight="800">Legislative Branch</text>
-
-           <rect class="svgBranch" x="40" y="250" width="200" height="54" rx="12"></rect>
-           <text x="140" y="284" text-anchor="middle" font-weight="800">Judicial Branch</text>
-
-           <rect class="svgBranch" x="680" y="250" width="200" height="54" rx="12"></rect>
-           <text x="780" y="284" text-anchor="middle" font-weight="800">Executive Branch</text>
-
-           <!-- Blank check boxes -->
-           <rect class="svgBox" x="92" y="110" width="220" height="64" rx="12"></rect>
-           <text class="svgLabel" x="202" y="132" text-anchor="middle">BOX 1 (Legislative → Executive)</text>
-           <text x="202" y="156" text-anchor="middle" font-weight="800">[blank]</text>
-
-           <rect class="svgBox" x="604" y="110" width="220" height="64" rx="12"></rect>
-           <text class="svgLabel" x="714" y="132" text-anchor="middle">BOX 2 (Executive → Judicial)</text>
-           <text x="714" y="156" text-anchor="middle" font-weight="800">[blank]</text>
-
-           <rect class="svgBox" x="350" y="190" width="220" height="64" rx="12"></rect>
-           <text class="svgLabel" x="460" y="212" text-anchor="middle">BOX 3 (Judicial → Legislative)</text>
-           <text x="460" y="236" text-anchor="middle" font-weight="800">[blank]</text>
-
-           <!-- Arrows -->
-           <line class="svgArrow" x1="460" y1="72" x2="202" y2="110"></line>
-           <line class="svgArrow" x1="460" y1="72" x2="714" y2="110"></line>
-
-           <line class="svgArrow" x1="780" y1="250" x2="714" y2="174"></line>
-           <line class="svgArrow" x1="140" y1="250" x2="460" y2="190"></line>
-
-           <!-- Subtle guidance -->
-           <text x="460" y="340" text-anchor="middle" class="svgLabel">
-             Choose the option that correctly fills Box 1, Box 2, and Box 3.
-           </text>
-         </svg>
-       </div>`;
     return box;
   }
 
