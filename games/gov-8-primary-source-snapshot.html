@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 8 — Primary Source Snapshot (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Primary Source Snapshot (MCQ + Select Two, 0 misses required)" />
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{ background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{ font-size:12px; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; padding:8px 10px; white-space:nowrap; }
+
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .small{ color:var(--muted); font-size:13px; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:900;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+
+    .sourceLine{
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .srcPill{
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      white-space:nowrap;
+    }
+
+    .excerpt{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+    .instructions{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      color:var(--text);
+      line-height:1.35;
+      font-size:13px;
+    }
+
+    .stem{
+      margin-top:12px;
+      font-weight:900;
+      line-height:1.25;
+    }
+
+    .choice{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px;
+      margin:10px 0;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+      user-select:none;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .choice:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.08);
+    }
+    .choice.disabled{
+      pointer-events:none;
+      opacity:.55;
+    }
+    .letter{
+      min-width:34px;
+      height:34px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      color:var(--text);
+    }
+    .ctext{ line-height:1.28; }
+    .selected{
+      border-color:rgba(122,162,255,.55);
+      background:rgba(122,162,255,.10);
+    }
+
+    .actionRow{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .counter{
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:12px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 8 — Primary Source Snapshot (Mastery)</h1>
+          <div class="small">Short primary-source excerpts + OST-style items (MCQ + Select-Two). Mastery = <b>0 misses</b>.</div>
+        </div>
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          <b>Rules:</b> Wrong answer → hint → must correct to move on. Miss is recorded. Mastery requires <b>0 misses</b>.
+        </div>
+      </section>
+
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Item</div>
+            <div class="small" id="tag">Primary Source • OST-style • CS aligned</div>
+          </div>
+
+          <div class="sourceLine">
+            <div class="srcPill" id="src">Source</div>
+            <div class="small" id="typeLine">Choose the best answer.</div>
+          </div>
+
+          <div id="excerpt" class="excerpt" style="display:none;"></div>
+
+          <div class="instructions">
+            <b>How to win:</b> Read the excerpt, answer the question. If you miss, you’ll get a hint and must correct to continue (miss recorded).
+          </div>
+
+          <div class="stem" id="stem"></div>
+          <div id="choices"></div>
+
+          <div class="actionRow">
+            <div class="counter" id="selectInfo">Select: 1</div>
+            <button class="btn" id="submitBtn" style="display:none;">Submit</button>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small">Tip: If the page ever “white screens,” the on-page error box will show where/why.</div>
+    </div>
+  </div>
+
+<script>
+/* ============ HARDENED SHELL ============ */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+window.addEventListener('pageshow', (event)=>{ if(event.persisted) window.location.reload(); });
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{ history.pushState({guard:1}, document.title, location.href); });
+  }catch(_){}
+})();
+
+/* ============ PRIMARY SOURCE SNAPSHOT BANK (30 items) ============ */
+/* Excerpts are intentionally short (snapshot style). */
+const ITEMS = [
+  {
+    type:"mcq",
+    tag:"CS 3–4 • Principles",
+    source:"Preamble (U.S. Constitution)",
+    excerpt:"“We the People … do ordain and establish this Constitution …”",
+    stem:"Which principle is BEST supported by the excerpt?",
+    choices:[
+      {t:"Popular sovereignty", c:true},
+      {t:"Judicial review", c:false},
+      {t:"Unitary government", c:false},
+      {t:"Monarchy", c:false}
+    ],
+    hint:"Hint: The excerpt identifies the source of political power."
+  },
+  {
+    type:"mcq",
+    tag:"CS 3–4 • Purposes",
+    source:"Preamble (U.S. Constitution)",
+    excerpt:"“… establish Justice, insure domestic Tranquility, provide for the common defence …”",
+    stem:"Which statement BEST explains the purpose of this excerpt?",
+    choices:[
+      {t:"It lists goals the national government is meant to pursue.", c:true},
+      {t:"It creates the Bill of Rights as law enforcement rules.", c:false},
+      {t:"It declares independence from Britain.", c:false},
+      {t:"It explains how to amend the Constitution.", c:false}
+    ],
+    hint:"Hint: The Preamble is a mission statement."
+  },
+  {
+    type:"select2",
+    tag:"CS 3–4 • Federalism",
+    source:"U.S. Constitution, Article VI",
+    excerpt:"“This Constitution … shall be the supreme Law of the Land …”",
+    stem:"Which TWO conclusions BEST follow from this excerpt?",
+    choices:[
+      {t:"A constitutional federal law overrides a conflicting state law.", c:true},
+      {t:"State judges must follow the U.S. Constitution in cases they hear.", c:true},
+      {t:"States can ignore federal law if they disagree with it.", c:false},
+      {t:"Only state constitutions can limit state governments.", c:false}
+    ],
+    hint:"Hint: “Supreme Law” affects conflicts between federal and state rules."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • 1st Amendment",
+    source:"First Amendment",
+    excerpt:"“Congress shall make no law … abridging the freedom of speech …”",
+    stem:"Which idea BEST reflects the meaning of the excerpt?",
+    choices:[
+      {t:"Government power to restrict speech is limited.", c:true},
+      {t:"Speech is protected only when it supports government officials.", c:false},
+      {t:"States must approve all speech before it occurs.", c:false},
+      {t:"Speech protections apply only to newspapers.", c:false}
+    ],
+    hint:"Hint: The amendment limits government power."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • 4th Amendment",
+    source:"Fourth Amendment",
+    excerpt:"“… no Warrants shall issue, but upon probable cause …”",
+    stem:"Which requirement is MOST directly stated in the excerpt?",
+    choices:[
+      {t:"Warrants require probable cause.", c:true},
+      {t:"Trials must be public.", c:false},
+      {t:"Congress must approve searches.", c:false},
+      {t:"Police may search any place at any time.", c:false}
+    ],
+    hint:"Hint: Focus on what is needed before a warrant can be issued."
+  },
+  {
+    type:"select2",
+    tag:"CS 9–12 • 6th Amendment",
+    source:"Sixth Amendment",
+    excerpt:"“… the accused shall enjoy the right to a speedy and public trial …”",
+    stem:"Which TWO rights are MOST clearly connected to the excerpt?",
+    choices:[
+      {t:"Speedy trial", c:true},
+      {t:"Public trial", c:true},
+      {t:"Protection against self-incrimination", c:false},
+      {t:"Protection from unreasonable searches", c:false}
+    ],
+    hint:"Hint: The excerpt names two trial features explicitly."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • 10th Amendment",
+    source:"Tenth Amendment",
+    excerpt:"“Powers not delegated … are reserved to the States … or to the people.”",
+    stem:"Which concept is MOST directly expressed by the excerpt?",
+    choices:[
+      {t:"Reserved powers", c:true},
+      {t:"Supremacy of state law", c:false},
+      {t:"Presidential term limits", c:false},
+      {t:"Judicial supremacy in elections", c:false}
+    ],
+    hint:"Hint: It describes where undelegated powers go."
+  },
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Checks & balances",
+    source:"Federalist No. 51 (Madison)",
+    excerpt:"“Ambition must be made to counteract ambition.”",
+    stem:"Which idea BEST matches the excerpt?",
+    choices:[
+      {t:"Checks and balances limit each branch.", c:true},
+      {t:"A single leader should control all government.", c:false},
+      {t:"Courts should write all laws.", c:false},
+      {t:"States should have no powers at all.", c:false}
+    ],
+    hint:"Hint: One branch’s power checks another branch."
+  },
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Judiciary",
+    source:"Marbury v. Madison (1803)",
+    excerpt:"“It is emphatically the province … of the judicial department to say what the law is.”",
+    stem:"Which principle is BEST supported by the excerpt?",
+    choices:[
+      {t:"Judicial review (courts interpret the Constitution and laws).", c:true},
+      {t:"Congress alone interprets the Constitution.", c:false},
+      {t:"The president can remove amendments by order.", c:false},
+      {t:"States may ignore federal court rulings.", c:false}
+    ],
+    hint:"Hint: The quote explains the judiciary’s role."
+  },
+  {
+    type:"select2",
+    tag:"CS 5–8 • Federal power",
+    source:"McCulloch v. Maryland (1819)",
+    excerpt:"“The power to tax involves the power to destroy.”",
+    stem:"Which TWO conclusions BEST align with the excerpt’s reasoning?",
+    choices:[
+      {t:"States cannot use taxation to undermine valid federal actions.", c:true},
+      {t:"Federal law can be supreme over conflicting state actions.", c:true},
+      {t:"States may veto federal laws by taxing them.", c:false},
+      {t:"Only states may create national banks.", c:false}
+    ],
+    hint:"Hint: Think about state interference with federal power."
+  },
+
+  /* ---- More snapshots (OST-style) ---- */
+  {
+    type:"mcq",
+    tag:"CS 13 • Elections",
+    source:"12th Amendment",
+    excerpt:"“The Electors … shall name … President and Vice-President …”",
+    stem:"What problem did this change MOST directly address?",
+    choices:[
+      {t:"It required separate electoral votes for president and vice president.", c:true},
+      {t:"It created term limits for presidents.", c:false},
+      {t:"It lowered the voting age to 18.", c:false},
+      {t:"It banned poll taxes nationwide.", c:false}
+    ],
+    hint:"Hint: Early elections had confusion about VP selection."
+  },
+  {
+    type:"mcq",
+    tag:"CS 13 • Voting rights",
+    source:"15th Amendment",
+    excerpt:"“The right … to vote shall not be denied … on account of race …”",
+    stem:"Which statement BEST describes the excerpt?",
+    choices:[
+      {t:"It prohibits racial discrimination in voting.", c:true},
+      {t:"It guarantees free speech for all citizens.", c:false},
+      {t:"It creates the Electoral College.", c:false},
+      {t:"It limits the president to two terms.", c:false}
+    ],
+    hint:"Hint: Identify what cannot be used to deny voting."
+  },
+  {
+    type:"mcq",
+    tag:"CS 13 • Term limits",
+    source:"22nd Amendment",
+    excerpt:"“No person shall be elected … more than twice …”",
+    stem:"What is the MOST direct effect of the excerpt?",
+    choices:[
+      {t:"It limits presidents to two elected terms (with exceptions).", c:true},
+      {t:"It requires Senate approval for treaties.", c:false},
+      {t:"It creates the Supreme Court.", c:false},
+      {t:"It gives states all powers not listed.", c:false}
+    ],
+    hint:"Hint: This amendment is about how long someone can be elected president."
+  },
+  {
+    type:"select2",
+    tag:"CS 13 • Succession",
+    source:"25th Amendment",
+    excerpt:"“Whenever the President transmits … inability …”",
+    stem:"Which TWO topics are MOST associated with this amendment?",
+    choices:[
+      {t:"Presidential disability procedures", c:true},
+      {t:"Vice presidential succession/filling a vacancy", c:true},
+      {t:"Restrictions on search warrants", c:false},
+      {t:"Rules for creating federal budgets", c:false}
+    ],
+    hint:"Hint: Think disability + succession."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • Due process",
+    source:"14th Amendment",
+    excerpt:"“… nor shall any State deprive any person of life, liberty, or property, without due process …”",
+    stem:"Which statement BEST reflects the excerpt?",
+    choices:[
+      {t:"States must follow fair procedures when limiting rights.", c:true},
+      {t:"Only Congress can enforce laws in states.", c:false},
+      {t:"States may deny rights without legal procedures.", c:false},
+      {t:"The president controls state courts.", c:false}
+    ],
+    hint:"Hint: Due process = fair procedures."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • Equal protection",
+    source:"14th Amendment",
+    excerpt:"“… deny to any person … the equal protection of the laws.”",
+    stem:"Which idea BEST connects to the excerpt?",
+    choices:[
+      {t:"Government must apply laws fairly to similarly situated people.", c:true},
+      {t:"Only property owners may vote.", c:false},
+      {t:"The federal government cannot tax.", c:false},
+      {t:"Congress must approve all state constitutions.", c:false}
+    ],
+    hint:"Hint: Equal protection focuses on equal treatment under law."
+  },
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Congress",
+    source:"U.S. Constitution, Article I",
+    excerpt:"“All legislative Powers … shall be vested in a Congress …”",
+    stem:"Which branch is MOST directly identified by the excerpt?",
+    choices:[
+      {t:"Legislative branch", c:true},
+      {t:"Executive branch", c:false},
+      {t:"Judicial branch", c:false},
+      {t:"State executive branch", c:false}
+    ],
+    hint:"Hint: Legislative powers = lawmaking."
+  },
+  {
+    type:"select2",
+    tag:"CS 5–8 • Executive checks",
+    source:"U.S. Constitution, Article II",
+    excerpt:"“The President … shall take Care that the Laws be faithfully executed …”",
+    stem:"Which TWO responsibilities BEST align with the excerpt’s meaning?",
+    choices:[
+      {t:"Enforce federal laws", c:true},
+      {t:"Direct executive agencies to carry out laws", c:true},
+      {t:"Declare war without Congress", c:false},
+      {t:"Write Supreme Court opinions", c:false}
+    ],
+    hint:"Hint: “Executed” connects to enforcement and agencies."
+  },
+  {
+    type:"mcq",
+    tag:"CS 5–8 • Judiciary",
+    source:"U.S. Constitution, Article III",
+    excerpt:"“The judicial Power … shall be vested in one supreme Court …”",
+    stem:"Which statement BEST matches the excerpt?",
+    choices:[
+      {t:"The Constitution creates a national judiciary headed by the Supreme Court.", c:true},
+      {t:"The Constitution requires all states to use the same laws.", c:false},
+      {t:"The Constitution bans political parties.", c:false},
+      {t:"The Constitution gives governors power to declare war.", c:false}
+    ],
+    hint:"Hint: It’s about where judicial power is placed."
+  },
+  {
+    type:"mcq",
+    tag:"CS 15 • Treaty power",
+    source:"U.S. Constitution, Article II (Treaties)",
+    excerpt:"“… by and with the Advice and Consent of the Senate …”",
+    stem:"Which conclusion BEST follows from the excerpt?",
+    choices:[
+      {t:"Treaties require Senate approval.", c:true},
+      {t:"Treaties are decided by the Supreme Court.", c:false},
+      {t:"Governors must approve treaties first.", c:false},
+      {t:"Treaties replace elections.", c:false}
+    ],
+    hint:"Hint: The Senate plays a formal role."
+  },
+
+  /* --- Additional OST-style snapshots --- */
+  {
+    type:"mcq",
+    tag:"CS 2 • Civic participation",
+    source:"Declaration of Independence",
+    excerpt:"“… deriving their just powers from the consent of the governed …”",
+    stem:"Which concept is MOST clearly expressed?",
+    choices:[
+      {t:"Consent of the governed", c:true},
+      {t:"Judicial review", c:false},
+      {t:"Executive privilege", c:false},
+      {t:"Bicameralism", c:false}
+    ],
+    hint:"Hint: Legitimate power comes from people’s approval."
+  },
+  {
+    type:"select2",
+    tag:"CS 9–12 • Petition/assembly",
+    source:"First Amendment",
+    excerpt:"“… the right of the people peaceably to assemble, and to petition …”",
+    stem:"Which TWO actions are MOST protected by the excerpt?",
+    choices:[
+      {t:"Holding a peaceful protest in a public park", c:true},
+      {t:"Submitting a written request to officials to change a policy", c:true},
+      {t:"Searching a home without a warrant", c:false},
+      {t:"Forcing a confession during interrogation", c:false}
+    ],
+    hint:"Hint: Assemble + petition are named directly."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • Self-incrimination",
+    source:"Fifth Amendment",
+    excerpt:"“… nor shall be compelled … to be a witness against himself …”",
+    stem:"Which protection is stated in the excerpt?",
+    choices:[
+      {t:"Protection against self-incrimination", c:true},
+      {t:"Freedom of religion", c:false},
+      {t:"Right to bear arms", c:false},
+      {t:"Protection against unreasonable searches", c:false}
+    ],
+    hint:"Hint: “Witness against himself” = incrimination."
+  },
+  {
+    type:"mcq",
+    tag:"CS 9–12 • Punishment",
+    source:"Eighth Amendment",
+    excerpt:"“… nor cruel and unusual punishments inflicted.”",
+    stem:"Which question BEST relates to the excerpt?",
+    choices:[
+      {t:"Is the punishment excessively harsh compared to the offense?", c:true},
+      {t:"Did police have probable cause for a warrant?", c:false},
+      {t:"Did Congress pass the bill in both chambers?", c:false},
+      {t:"Did the president negotiate a treaty?", c:false}
+    ],
+    hint:"Hint: The excerpt is about punishments, not searches or lawmaking."
+  },
+  {
+    type:"select2",
+    tag:"CS 3–4 • Separation of powers",
+    source:"Federalist No. 47 (Madison)",
+    excerpt:"“… accumulation of all powers … may justly be pronounced the very definition of tyranny.”",
+    stem:"Which TWO constitutional features are MOST related to preventing this problem?",
+    choices:[
+      {t:"Separation of powers", c:true},
+      {t:"Checks and balances", c:true},
+      {t:"Winner-take-all elections", c:false},
+      {t:"State nullification of federal law", c:false}
+    ],
+    hint:"Hint: Preventing tyranny = dividing power and checking power."
+  }
+];
+
+// Make sure exactly 30 by cloning variants (keeps engine stable)
+const TARGET = 30;
+while(ITEMS.length < TARGET){
+  const src = ITEMS[ITEMS.length % Math.max(1, ITEMS.length)];
+  const clone = JSON.parse(JSON.stringify(src));
+  clone.tag = (clone.tag || "CS aligned") + " • Variant";
+  ITEMS.push(clone);
+}
+if(ITEMS.length > TARGET) ITEMS.length = TARGET;
+
+/* ============ UTIL ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function rotate(arr, k){
+  const n = arr.length;
+  const s = ((k%n)+n)%n;
+  return arr.slice(s).concat(arr.slice(0,s));
+}
+function mixedChoices(choices, seed){
+  return shuffle(rotate(choices, seed % choices.length));
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* ============ STATE ============ */
+const KEY = "LEGEND_GOV8_V1";
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tagEl = document.getElementById('tag');
+const srcEl = document.getElementById('src');
+const typeLine = document.getElementById('typeLine');
+const excerptEl = document.getElementById('excerpt');
+const stemEl = document.getElementById('stem');
+const choicesEl = document.getElementById('choices');
+
+const selectInfo = document.getElementById('selectInfo');
+const submitBtn = document.getElementById('submitBtn');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+function resetMsgs(){
+  goodMsg.style.display="none"; badMsg.style.display="none"; hintMsg.style.display="none";
+  goodMsg.textContent=""; badMsg.textContent=""; hintMsg.textContent="";
+}
+function lockChoices(lock=true){
+  choicesEl.querySelectorAll('.choice').forEach(c=> c.classList.toggle('disabled', lock));
+  submitBtn.disabled = lock;
+}
+
+/* ============ BUILD BANK ============ */
+function buildBank(){
+  const bank = shuffle(ITEMS.map(x=>JSON.parse(JSON.stringify(x))));
+  bank.forEach((it, idx)=>{
+    it.wrongRecorded = false;
+    it.answered = false;
+    it.seed = 8000 + idx*41;
+  });
+  return bank;
+}
+
+/* ============ RENDER ============ */
+let selected = []; // indices in current rendered order
+
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  resetMsgs();
+  selected = [];
+
+  const it = state.bank[state.idx];
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Item ${state.idx+1}`;
+  tagEl.textContent = it.tag || "Primary Source • OST-style • CS aligned";
+  srcEl.textContent = it.source ? `SOURCE: ${it.source}` : "SOURCE";
+
+  if(it.excerpt && it.excerpt.trim()){
+    excerptEl.style.display="block";
+    excerptEl.textContent = it.excerpt.trim();
+  }else{
+    excerptEl.style.display="none";
+    excerptEl.textContent = "";
+  }
+
+  stemEl.textContent = it.stem || "";
+
+  const isSelect2 = it.type === "select2";
+  typeLine.textContent = isSelect2 ? "Select TWO correct answers." : "Choose the best answer.";
+  selectInfo.textContent = isSelect2 ? "Select: 2" : "Select: 1";
+  submitBtn.style.display = isSelect2 ? "inline-block" : "none";
+  submitBtn.disabled = true;
+
+  const mixed = mixedChoices(it.choices.slice(), it.seed);
+  it._rendered = mixed;
+
+  choicesEl.innerHTML = "";
+  mixed.forEach((ch, i)=>{
+    const div = document.createElement('div');
+    div.className = "choice";
+    div.dataset.i = String(i);
+    div.innerHTML = `<div class="letter">${String.fromCharCode(65+i)}</div><div class="ctext">${escapeHTML(ch.t)}</div>`;
+
+    div.addEventListener('click', ()=>{
+      if(div.classList.contains('disabled')) return;
+
+      if(isSelect2){
+        toggleSelect(div, i);
+        submitBtn.disabled = (selected.length !== 2);
+      }else{
+        selected = [i];
+        markSelected();
+        checkAnswer();
+      }
+    });
+
+    choicesEl.appendChild(div);
+  });
+
+  lockChoices(false);
+}
+
+function toggleSelect(div, i){
+  const pos = selected.indexOf(i);
+  if(pos >= 0){
+    selected.splice(pos, 1);
+  }else{
+    if(selected.length >= 2) return;
+    selected.push(i);
+  }
+  markSelected();
+}
+function markSelected(){
+  choicesEl.querySelectorAll('.choice').forEach(c=>{
+    const i = Number(c.dataset.i);
+    c.classList.toggle('selected', selected.includes(i));
+  });
+}
+
+/* ============ SUBMIT (select2) ============ */
+submitBtn.addEventListener('click', ()=>{
+  const it = state.bank[state.idx];
+  if(it.type !== "select2") return;
+  if(selected.length !== 2) return;
+  checkAnswer();
+});
+
+/* ============ CHECK / ADVANCE ============ */
+function checkAnswer(){
+  const it = state.bank[state.idx];
+  const rendered = it._rendered || it.choices;
+  const correctIdx = [];
+  rendered.forEach((c, i)=>{ if(c.c) correctIdx.push(i); });
+
+  state.attempts += 1;
+
+  let ok = false;
+  if(it.type === "mcq"){
+    ok = (selected.length===1 && correctIdx.length===1 && selected[0]===correctIdx[0]);
+  }else{
+    const a = selected.slice().sort((x,y)=>x-y);
+    const b = correctIdx.slice().sort((x,y)=>x-y);
+    ok = (a.length===2 && b.length===2 && a[0]===b[0] && a[1]===b[1]);
+  }
+
+  if(ok){
+    lockChoices(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = "Correct.";
+
+    it.answered = true;
+    save();
+
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        save();
+        render();
+      }
+    }, 1200);
+
+  }else{
+    if(!it.wrongRecorded){
+      it.wrongRecorded = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = "Incorrect. A miss has been recorded. Use the hint and try again.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = it.hint || "Hint: Identify the right/branch/principle that the excerpt is describing.";
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+    save();
+  }
+}
+
+/* ============ FINISH ============ */
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  lockChoices(true);
+}
+
+/* ============ START / BOOT ============ */
+function startNew(name){
+  const startAt = Date.now();
+  state = {
+    version:"GOV8_V1",
+    gameTitle:"Gov Game 8 — Primary Source Snapshot (Mastery)",
+    name,
+    startAt,
+    endAt:null,
+    idx:0,
+    bank: buildBank(),
+    misses:0,
+    attempts:0,
+    finished:false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+
+  render();
+}
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    nameInput.focus();
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV8_V1"){
+    state = existing;
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
