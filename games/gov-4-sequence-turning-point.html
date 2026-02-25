@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gov Game 4 — Sequence / Turning Point (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="Ohio American Government OST Mastery — Sequence / Turning Point (0 misses required)" />
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{ background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{ font-size:12px; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; padding:8px 10px; white-space:nowrap; }
+
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .small{ color:var(--muted); font-size:13px; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:800;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+    .stim{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+
+    .instructions{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      color:var(--text);
+      line-height:1.35;
+      font-size:13px;
+    }
+
+    .seqArea{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .seqArea{ grid-template-columns: 1fr; }
+    }
+
+    .stack{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.12);
+      border-radius:16px;
+      padding:12px;
+      min-height: 140px;
+    }
+    .stackHeader{
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .tag{
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.20);
+      padding:6px 10px;
+      border-radius:999px;
+      color:var(--text);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .cardItem{
+      user-select:none;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:10px 10px;
+      margin:10px 0;
+      cursor:grab;
+      font-weight:800;
+      line-height:1.3;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .cardItem:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.08);
+    }
+    .cardItem.dragging{
+      opacity:.6;
+      cursor:grabbing;
+    }
+    .dropHint{
+      border:1px dashed rgba(255,255,255,.20);
+      border-radius:14px;
+      padding:10px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      background:rgba(0,0,0,.10);
+    }
+
+    .turning{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.12);
+      border-radius:16px;
+      padding:12px;
+    }
+    .turning h3{ margin:0 0 8px; font-size:14px; }
+    .turning .small{ margin:0 0 10px; }
+    .turnChoice{
+      display:flex; gap:10px; align-items:flex-start;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px;
+      margin:10px 0;
+      cursor:pointer;
+    }
+    .turnChoice input{ margin-top:3px; }
+    .turnChoice b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.10em; text-transform:uppercase; }
+
+    .actionRow{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .counter{
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:12px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">Gov Game 4 — Sequence / Turning Point (Mastery)</h1>
+          <div class="small">Drag events into order, then choose the <b>turning point</b> step. Mastery = <b>0 misses</b>.</div>
+        </div>
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          How it works: (1) <b>Drag</b> the three cards into the correct order. (2) Select the <b>turning point</b> step (the step where the outcome becomes hard to reverse). (3) Submit.
+        </div>
+      </section>
+
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Question</div>
+            <div class="small" id="tag">OST-style • Sequence / Turning Point • CS aligned</div>
+          </div>
+
+          <div id="stimulus" class="stim" style="display:none;"></div>
+
+          <div class="instructions">
+            <b>Instructions:</b> Drag the three steps into the correct order on the left. Then, on the right, choose which step is the <b>turning point</b>.
+            <br><span class="small">Mastery rule: wrong answer records a miss; you must correct to move on.</span>
+          </div>
+
+          <div class="seqArea">
+            <div class="stack">
+              <div class="stackHeader">
+                <div class="tag">Order the steps</div>
+                <div class="small" id="dragNote">Drag to reorder</div>
+              </div>
+              <div id="list" aria-label="Sequence list"></div>
+              <div class="dropHint">Tip: Click and drag a card up or down.</div>
+            </div>
+
+            <div class="turning">
+              <h3>Turning Point</h3>
+              <div class="small">Which step is the turning point in the sequence?</div>
+              <div id="turnChoices"></div>
+            </div>
+          </div>
+
+          <div class="actionRow">
+            <div class="counter" id="selCount">Turning point selected: No</div>
+            <button class="btn" id="submitBtn">Submit</button>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small">Tip: If the page ever “white screens,” the on-page error box will show where/why.</div>
+    </div>
+  </div>
+
+<script>
+/* ============ HARDENED SHELL ============ */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+window.addEventListener('pageshow', (event)=>{ if(event.persisted) window.location.reload(); });
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{ history.pushState({guard:1}, document.title, location.href); });
+  }catch(_){}
+})();
+
+/* ============ QUESTION BANK (25 sequences) ============ */
+const RAW = [
+  {
+    tag:"CS 5–8 • How a bill becomes law",
+    stimulus:"Congress is considering a major education funding bill.",
+    steps:[
+      {id:"a", text:"The House and Senate pass the same version of the bill"},
+      {id:"b", text:"The president signs the bill (or Congress overrides a veto)"},
+      {id:"c", text:"The law is implemented by executive agencies"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: The turning point is when the proposal becomes law (or effectively becomes law)."
+  },
+  {
+    tag:"CS 5–8 • Veto / override",
+    stimulus:"A bill passes Congress, but the president opposes it.",
+    steps:[
+      {id:"a", text:"The president vetoes the bill"},
+      {id:"b", text:"Congress votes to override the veto (2/3 in each chamber)"},
+      {id:"c", text:"The bill becomes law despite the veto"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: The key turning point is the action that makes the veto ineffective."
+  },
+  {
+    tag:"CS 9–12 • Search warrant basics",
+    stimulus:"Police want to search a home for stolen property.",
+    steps:[
+      {id:"a", text:"Police present evidence to a judge to establish probable cause"},
+      {id:"b", text:"A judge issues a warrant describing the place and items to search/seize"},
+      {id:"c", text:"Police execute the search according to the warrant’s limits"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is when legal permission is granted for the search."
+  },
+  {
+    tag:"CS 9–12 • Criminal trial protections",
+    stimulus:"A felony case goes to trial.",
+    steps:[
+      {id:"a", text:"The defendant is informed of the charges and enters a plea"},
+      {id:"b", text:"The trial occurs (public, impartial jury) and evidence is presented"},
+      {id:"c", text:"A verdict is reached and sentencing follows if guilty"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is when the fact-finding happens and guilt/innocence is decided."
+  },
+  {
+    tag:"CS 13 • Electoral College basics",
+    stimulus:"The country is choosing a president.",
+    steps:[
+      {id:"a", text:"Voters cast ballots in each state (choosing electors pledged to candidates)"},
+      {id:"b", text:"Electors meet and cast electoral votes for president and vice president"},
+      {id:"c", text:"Electoral votes are counted and the winner is certified"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is the step that actually decides the winner under the Constitution."
+  },
+  {
+    tag:"CS 13 • 25th Amendment (disability)",
+    stimulus:"A president becomes temporarily unable to perform duties.",
+    steps:[
+      {id:"a", text:"The vice president becomes acting president under 25th Amendment procedures"},
+      {id:"b", text:"The president recovers and declares ability to resume duties"},
+      {id:"c", text:"The vice president returns to normal vice-presidential role"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is when authority shifts so the executive branch can still function."
+  },
+  {
+    tag:"CS 15 • Treaty process",
+    stimulus:"The U.S. negotiates a treaty with another country.",
+    steps:[
+      {id:"a", text:"The president negotiates and signs the treaty"},
+      {id:"b", text:"The Senate votes to approve the treaty (advice and consent)"},
+      {id:"c", text:"The treaty is ratified and takes effect for the United States"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is the constitutional approval required before it can take effect."
+  },
+  {
+    tag:"CS 5–8 • Supreme Court decision path",
+    stimulus:"A case reaches the U.S. Supreme Court.",
+    steps:[
+      {id:"a", text:"The Court agrees to hear the case (grants review)"},
+      {id:"b", text:"The Court hears arguments and issues a written decision"},
+      {id:"c", text:"Lower courts and officials apply the ruling to future cases/policies"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is when the binding interpretation is announced."
+  },
+  {
+    tag:"CS 9–12 • Incorporation (14th Amendment)",
+    stimulus:"A state law restricts a right protected in the Bill of Rights.",
+    steps:[
+      {id:"a", text:"A case challenges the state law in court"},
+      {id:"b", text:"The court uses the 14th Amendment to apply the right to the state"},
+      {id:"c", text:"The state must change enforcement to comply with the ruling"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is when the right is applied to the state through the 14th."
+  },
+  {
+    tag:"CS 14 • Fiscal policy (spending)",
+    stimulus:"Unemployment rises and Congress wants to stimulate the economy.",
+    steps:[
+      {id:"a", text:"Congress passes an increase in government spending"},
+      {id:"b", text:"The executive branch spends funds through programs/projects"},
+      {id:"c", text:"Higher spending increases demand and can reduce unemployment"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is the policy decision that sets the action in motion."
+  },
+  {
+    tag:"CS 14 • Fiscal policy (tax change)",
+    stimulus:"Leaders want to increase consumer spending.",
+    steps:[
+      {id:"a", text:"Congress passes a tax cut (reducing taxes)"},
+      {id:"b", text:"Households have more disposable income"},
+      {id:"c", text:"Spending may rise and economic activity may increase"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is when the tax policy changes."
+  },
+  {
+    tag:"CS 14 • Monetary policy (tightening)",
+    stimulus:"Inflation is rising and the Fed wants to cool demand.",
+    steps:[
+      {id:"a", text:"The Federal Reserve raises interest-rate conditions through its policy tools"},
+      {id:"b", text:"Borrowing becomes more expensive; spending/investment may slow"},
+      {id:"c", text:"Inflation pressure may decrease over time"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is the Fed’s policy action."
+  },
+  {
+    tag:"CS 14 • Monetary policy (easing)",
+    stimulus:"The economy is slowing and the Fed wants to encourage borrowing.",
+    steps:[
+      {id:"a", text:"The Federal Reserve lowers interest-rate conditions through policy tools"},
+      {id:"b", text:"Loans become cheaper; spending/investment may increase"},
+      {id:"c", text:"Economic output and employment may rise over time"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is the central bank’s action that changes credit conditions."
+  },
+  {
+    tag:"CS 1 • Local public policy",
+    stimulus:"A school board considers a new policy on student devices.",
+    steps:[
+      {id:"a", text:"Residents attend a meeting and provide public comment with evidence"},
+      {id:"b", text:"The school board votes to adopt or reject the policy"},
+      {id:"c", text:"The district implements the policy in schools"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is when the decision is officially made."
+  },
+  {
+    tag:"CS 2 • Interest group influence",
+    stimulus:"An interest group wants changes to a proposed law.",
+    steps:[
+      {id:"a", text:"The group meets legislators and shares research (lobbying)"},
+      {id:"b", text:"Lawmakers revise the bill or decide whether to support it"},
+      {id:"c", text:"The bill advances (or fails) through the legislative process"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is where lawmakers decide and the bill’s path changes."
+  },
+  {
+    tag:"CS 3 • Popular sovereignty (accountability)",
+    stimulus:"Voters are unhappy with government performance.",
+    steps:[
+      {id:"a", text:"Citizens evaluate officials’ actions and campaign issues"},
+      {id:"b", text:"Citizens vote in an election"},
+      {id:"c", text:"New officials take office and policy direction changes"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is the step where the people exercise authority directly."
+  },
+  {
+    tag:"CS 5–8 • Executive order context",
+    stimulus:"A president wants to direct how an executive agency enforces an existing law.",
+    steps:[
+      {id:"a", text:"The president issues an executive order to the agency"},
+      {id:"b", text:"The agency updates procedures and guidance for enforcement"},
+      {id:"c", text:"Courts may review the order if challenged"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is the president’s directive that triggers agency action."
+  },
+  {
+    tag:"CS 5–8 • Impeachment overview",
+    stimulus:"Congress investigates an allegation of serious misconduct by a federal official.",
+    steps:[
+      {id:"a", text:"The House impeaches (votes articles of impeachment)"},
+      {id:"b", text:"The Senate holds a trial and votes on conviction"},
+      {id:"c", text:"If convicted, the official may be removed from office"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is the step that determines removal."
+  },
+  {
+    tag:"CS 9–12 • Due process (property)",
+    stimulus:"A city wants to take private property for a project.",
+    steps:[
+      {id:"a", text:"Government follows required legal procedures (notice/hearing)"},
+      {id:"b", text:"A decision is made under the law (and compensation rules apply)"},
+      {id:"c", text:"The property transfer occurs according to the decision"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is the legal decision that authorizes the outcome."
+  },
+  {
+    tag:"CS 5–8 • Budget / appropriations",
+    stimulus:"Congress wants to influence an executive agency’s priorities.",
+    steps:[
+      {id:"a", text:"Congress passes appropriations specifying how funds may be used"},
+      {id:"b", text:"The agency carries out programs within the funding limits"},
+      {id:"c", text:"Congress conducts oversight to review spending and outcomes"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is when funding rules are set."
+  },
+  {
+    tag:"CS 2 • Media and public pressure",
+    stimulus:"A major news story exposes unsafe water in a community.",
+    steps:[
+      {id:"a", text:"Media coverage increases public awareness and concern"},
+      {id:"b", text:"Officials propose or prioritize a policy response"},
+      {id:"c", text:"Government implements fixes and communicates results"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"b",
+    hint:"Hint: Turning point is when officials commit to a response."
+  },
+  {
+    tag:"CS 9–12 • Double jeopardy",
+    stimulus:"A defendant is found not guilty in a criminal trial.",
+    steps:[
+      {id:"a", text:"A verdict is reached (not guilty)"},
+      {id:"b", text:"The defendant cannot be tried again for the same offense"},
+      {id:"c", text:"The case concludes under that verdict"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is the verdict that triggers the protection."
+  },
+  {
+    tag:"CS 9–12 • Right to counsel (practical)",
+    stimulus:"A defendant cannot afford an attorney for a serious criminal charge.",
+    steps:[
+      {id:"a", text:"The court appoints counsel for the defendant"},
+      {id:"b", text:"Counsel helps prepare a defense and challenge evidence"},
+      {id:"c", text:"The trial proceeds with representation"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is when counsel is appointed and the defense becomes viable."
+  },
+  {
+    tag:"CS 14 • Automatic stabilizers",
+    stimulus:"A recession causes job losses.",
+    steps:[
+      {id:"a", text:"More people qualify for unemployment benefits automatically"},
+      {id:"b", text:"Benefits help maintain household purchasing power"},
+      {id:"c", text:"Demand is partially supported during the downturn"}
+    ],
+    correctOrder:["a","b","c"],
+    turningId:"a",
+    hint:"Hint: Turning point is the automatic trigger that increases benefits without new laws."
+  }
+];
+
+/* ============ UTIL ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+
+/* ============ STATE ============ */
+const KEY = "LEGEND_GOV4_V1";
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tagEl = document.getElementById('tag');
+const stimulusEl = document.getElementById('stimulus');
+
+const listEl = document.getElementById('list');
+const turnChoicesEl = document.getElementById('turnChoices');
+const selCountEl = document.getElementById('selCount');
+const submitBtn = document.getElementById('submitBtn');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+function resetMsgs(){
+  goodMsg.style.display="none"; badMsg.style.display="none"; hintMsg.style.display="none";
+  goodMsg.textContent=""; badMsg.textContent=""; hintMsg.textContent="";
+}
+function lockUI(lock=true){
+  // disable drag + radios + submit
+  listEl.querySelectorAll('.cardItem').forEach(el=>{
+    el.draggable = !lock;
+    el.style.pointerEvents = lock ? 'none' : 'auto';
+  });
+  turnChoicesEl.querySelectorAll('input[type="radio"]').forEach(r=> r.disabled = lock);
+  submitBtn.disabled = lock;
+}
+
+/* ============ BUILD BANK (shuffle order; shuffle step order within each item) ============ */
+function buildBank(){
+  // shallow copy
+  const bank = shuffle(RAW.map(q=>JSON.parse(JSON.stringify(q))));
+  // for each item, shuffle the display order initially (not the correct order)
+  bank.forEach(q=>{
+    q.display = shuffle(q.steps.slice());
+    q.turnPick = null; // selected index (0..2) by position in current list
+    q.draggedOnce = false;
+  });
+  return bank;
+}
+
+/* ============ DRAG + DROP ============ */
+let dragIndex = null;
+
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  resetMsgs();
+
+  const q = state.bank[state.idx];
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Question ${state.idx+1}`;
+  tagEl.textContent = q.tag || "OST-style • Sequence / Turning Point • CS aligned";
+
+  if(q.stimulus && q.stimulus.trim()){
+    stimulusEl.style.display="block";
+    stimulusEl.textContent = q.stimulus.trim();
+  }else{
+    stimulusEl.style.display="none";
+    stimulusEl.textContent = "";
+  }
+
+  // render draggable list
+  listEl.innerHTML = "";
+  q.display.forEach((s, idx)=>{
+    const div = document.createElement('div');
+    div.className = "cardItem";
+    div.draggable = true;
+    div.dataset.idx = String(idx);
+    div.dataset.id = s.id;
+    div.textContent = s.text;
+
+    div.addEventListener('dragstart', (e)=>{
+      dragIndex = Number(div.dataset.idx);
+      div.classList.add('dragging');
+      e.dataTransfer.effectAllowed = "move";
+    });
+    div.addEventListener('dragend', ()=>{
+      div.classList.remove('dragging');
+      dragIndex = null;
+    });
+
+    // allow drop above/below by using dragover on each element
+    div.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+    div.addEventListener('drop', (e)=>{
+      e.preventDefault();
+      const to = Number(div.dataset.idx);
+      if(dragIndex === null || Number.isNaN(to) || dragIndex===to) return;
+
+      // move item
+      const moved = q.display.splice(dragIndex, 1)[0];
+      q.display.splice(to, 0, moved);
+
+      q.draggedOnce = true;
+      // if a turning point was selected, keep it by ID, not by position
+      const pickedId = q.turnPickId || null;
+      if(pickedId){
+        // re-map selection to new position
+        const newPos = q.display.findIndex(x=>x.id===pickedId);
+        q.turnPick = newPos>=0 ? newPos : null;
+      }
+
+      save();
+      render();
+    });
+
+    listEl.appendChild(div);
+  });
+
+  // turning point choices mirror current order; choose one step as TP
+  turnChoicesEl.innerHTML = "";
+  q.display.forEach((s, idx)=>{
+    const lab = document.createElement('label');
+    lab.className = "turnChoice";
+    lab.innerHTML = `
+      <input type="radio" name="tp" value="${idx}">
+      <div>
+        <b>Step ${idx+1}</b>
+        <div>${escapeHTML(s.text)}</div>
+      </div>
+    `;
+    const radio = lab.querySelector('input');
+    if(q.turnPick === idx) radio.checked = true;
+
+    lab.addEventListener('click', ()=>{
+      q.turnPick = idx;
+      q.turnPickId = q.display[idx].id;
+      selCountEl.textContent = "Turning point selected: Yes";
+      save();
+      // no full re-render needed
+    });
+
+    turnChoicesEl.appendChild(lab);
+  });
+
+  selCountEl.textContent = (q.turnPick===null) ? "Turning point selected: No" : "Turning point selected: Yes";
+  submitBtn.disabled = false;
+  lockUI(false);
+}
+
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* ============ CHECK ANSWER ============ */
+submitBtn.addEventListener('click', ()=>{
+  if(state.finished) return;
+
+  const q = state.bank[state.idx];
+
+  if(q.turnPick === null){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Select a turning point step before submitting.";
+    return;
+  }
+
+  state.attempts += 1;
+
+  const currentIds = q.display.map(x=>x.id);
+  const orderCorrect = currentIds.join("|") === q.correctOrder.join("|");
+  const turningCorrect = (q.display[q.turnPick]?.id === q.turningId);
+
+  if(orderCorrect && turningCorrect){
+    lockUI(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent="Correct order AND correct turning point.";
+
+    save();
+
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        save();
+        render();
+      }
+    }, 950);
+
+  }else{
+    if(!state.wrongSet[state.idx]){
+      state.wrongSet[state.idx] = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent="Not yet. A miss has been recorded. Use the hint, then correct your sequence and turning point.";
+
+    const parts = [];
+    if(!orderCorrect) parts.push("Order is off.");
+    if(!turningCorrect) parts.push("Turning point is off.");
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = `${parts.join(" ")} ${q.hint || "Hint: Identify the step that makes the outcome hard to reverse (decision/approval/ruling)."} `;
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+    save();
+  }
+});
+
+/* ============ FINISH ============ */
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  lockUI(true);
+}
+
+/* ============ START / BOOT ============ */
+function startNew(name){
+  const startAt = Date.now();
+  state = {
+    version:"GOV4_V1",
+    gameTitle:"Gov Game 4 — Sequence / Turning Point (Mastery)",
+    name,
+    startAt,
+    endAt:null,
+    idx:0,
+    bank: buildBank(),
+    misses:0,
+    attempts:0,
+    wrongSet:{},
+    finished:false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+
+  render();
+}
+
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    nameInput.focus();
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="GOV4_V1"){
+    state = existing;
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
