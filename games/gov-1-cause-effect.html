@@ -57,6 +57,34 @@
     .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
     .qnum{ font-weight:900; }
     .small{ color:var(--muted); font-size:13px; }
+
+    .passage{
+      margin-top:12px;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid rgba(122,162,255,.28);
+      background:rgba(122,162,255,.08);
+    }
+    .passageTitle{
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+    .passageBody{
+      line-height:1.45;
+      font-size:14px;
+      color:var(--text);
+    }
+    .passageBody p{ margin:0 0 10px; }
+    .passageBody p:last-child{ margin-bottom:0; }
+    .passageBody .timeline-year{
+      font-weight:900;
+      color:var(--text);
+    }
+
     .stem{ margin:10px 0 0; line-height:1.35; font-size:16px; }
     .choices{ margin-top:12px; display:grid; gap:10px; }
     .choice{
@@ -96,7 +124,7 @@
     @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
     .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
     .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
-    /* On-page error box */
+
     #errBox{
       display:none; margin-top:12px;
       padding:12px; border-radius:14px;
@@ -107,7 +135,7 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size:12px;
     }
-    /* Start gate */
+
     #gate{
       display:block;
       margin-top:12px;
@@ -163,7 +191,6 @@
       <div id="errBox"></div>
       <div class="divider"></div>
 
-      <!-- START GATE -->
       <section id="gate">
         <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
         <div class="fieldRow" style="margin-top:10px;">
@@ -173,13 +200,18 @@
         <div class="ghost">Tip: Mastery requires finishing the full set with <b>0 misses</b>. If you miss one, you can still finish, but you’ll need a hard restart to earn mastery.</div>
       </section>
 
-      <!-- GAME -->
       <section id="game" style="display:none;">
         <div class="qbox">
           <div class="qmeta">
             <div class="qnum" id="qnum">Question</div>
             <div class="small" id="tag">OST-style • CS aligned</div>
           </div>
+
+          <div id="passageBox" class="passage" style="display:none;">
+            <div class="passageTitle">Source / Passage</div>
+            <div class="passageBody" id="passageBody"></div>
+          </div>
+
           <div class="stem" id="stem">—</div>
 
           <div class="choices" id="choices"></div>
@@ -219,11 +251,6 @@
   </div>
 
 <script>
-/* =========================
-   HARDENED SHELL + SAFETY
-========================= */
-
-// On-page error box
 (function(){
   const errBox = document.getElementById('errBox');
   window.addEventListener('error', (e)=>{
@@ -236,12 +263,10 @@
   });
 })();
 
-// bfcache fix (Safari/Chrome back-forward cache)
 window.addEventListener('pageshow', (event) => {
   if (event.persisted) window.location.reload();
 });
 
-// History guard against back-button returning to “finished” state
 (function(){
   try{
     history.replaceState({guard:1}, document.title, location.href);
@@ -250,12 +275,6 @@ window.addEventListener('pageshow', (event) => {
     });
   }catch(_){}
 })();
-
-/* =========================
-   QUESTION BANK (32)
-   Uses your uploaded bank + aligned additions.
-   Controlled shuffling balances A/B/C/D for the correct answer.
-========================= */
 
 const RAW = [
   {
@@ -343,23 +362,23 @@ const RAW = [
     explain: "Popular sovereignty means government authority is derived from the people through representation."
   },
   {
-    stem: "Which statement summarizes the original Federalist position on the Bill of Rights?",
-    choices: [
-      "Additional amendments were needed, given the lack of individual protections",
-      "Adopting the Bill of Rights was too risky because it might threaten ratification of the Constitution",
-      "The Bill of Rights should be adopted because national sovereignty should always come before states rights",
-      "No amendments were needed, as the Constitution already had protections against excessive government power"
-    ],
-    answerIndex: 3,
-    hint: "Hint: Federalists initially argued a Bill of Rights was unnecessary.",
-    explain: "Federalists argued the Constitution already limited government and that listing rights could imply others didn’t exist."
-  },
-  {
+    passage: `
+      <p><strong>Impoundment</strong></p>
+      <p>Impoundment is a refusal by the president to spend funds allocated for a specific purpose by Congress. A time line of events related to impoundment is shown.</p>
+
+      <p><span class="timeline-year">1803—</span> President Thomas Jefferson became the first president to use the power of impoundment when he refused to spend $50,000 allocated by Congress to purchase gunboats to patrol the Mississippi River. Congress feared French encroachment on United States lands in North America. However, following the signing of the Louisiana Purchase, President Jefferson felt that this fear was unfounded and the gunboats were unnecessary.</p>
+
+      <p><span class="timeline-year">1972—</span> Congress passed the Clean Water Act, which created national standards for water quality. Due to its high cost, President Nixon vetoed the bill. With support from both parties, Congress, by an overwhelming majority, voted to override the president’s veto. President Nixon then used the power of impoundment to withhold much of the money allocated by the Clean Water Act.</p>
+
+      <p><span class="timeline-year">1974—</span> Congress passed the Impoundment Control Act of 1974, which required that, rather than impounding funds unilaterally, the president submit a request to Congress to reduce funding it had allocated. If Congress does not approve the request to reduce funding within 45 days, the amount of funds being impounded must be disbursed by the president.</p>
+
+      <p><span class="timeline-year">1975—</span> Several municipalities, including the city of New York, sued Russell Train, the director of the Environmental Protection Agency, claiming that he was indeed obligated to disburse the entire allotment of funding allocated by Congress under the Clean Water Act, not just the portion of funds not impounded by the president. The Supreme Court, in <em>Train v. City of New York</em>, ruled that the president could not impound funds lawfully allocated by Congress.</p>
+    `,
     stem: "In which year do the events in the impoundment timeline illustrate the principle of federalism?",
     choices: ["1803","1972","1974","1975"],
-    answerIndex: 2,
-    hint: "Hint: Federalism is about national/state power boundaries—look for Congress requiring executive behavior under federal law.",
-    explain: "The Impoundment Control Act (1974) shows federal legislative control shaping how executive action works nationally."
+    answerIndex: 3,
+    hint: "Hint: Federalism focuses on the relationship between different levels of government. Look for the year when local governments are involved in a conflict tied to federal power.",
+    explain: "The best answer is 1975 because municipalities, including the city of New York, were directly involved in a dispute with the national government, which most clearly reflects federalism."
   },
   {
     stem: "Which constitutional amendment served as the basis for the Court’s ruling in Gideon v. Wainwright?",
@@ -565,8 +584,6 @@ const RAW = [
     hint: "Hint: Higher rates make borrowing more expensive.",
     explain: "Higher interest rates raise borrowing costs, which tends to slow spending and investment."
   },
-
-  /* Aligned additions (ODE language / expectations) */
   {
     stem: "A citizen wants to challenge a new state law as violating the U.S. Constitution. Which branch has the power to decide whether the law is constitutional?",
     choices: ["Legislative branch","Executive branch","Judicial branch","Bureaucratic agencies"],
@@ -597,10 +614,8 @@ const RAW = [
   }
 ];
 
-/* =========================
-   CONTROLLED SHUFFLING (A/B/C/D BALANCE)
-========================= */
 const LETTERS = ["A","B","C","D"];
+
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -609,25 +624,21 @@ function shuffle(arr){
   }
   return a;
 }
-// Balance correct positions across the set by targeting the least-used letter.
+
 function buildBalancedSet(raw){
   const counts = {A:0,B:0,C:0,D:0};
+
   const built = raw.map(q=>{
-    // create objects with id
     const choices = q.choices.map((txt, idx)=>({txt, isCorrect: idx===q.answerIndex}));
-    // random shuffle first
     let s = shuffle(choices);
 
-    // find current correct index
     let ci = s.findIndex(x=>x.isCorrect);
 
-    // choose target letter with lowest count (break ties randomly)
     const min = Math.min(counts.A,counts.B,counts.C,counts.D);
     const candidates = LETTERS.filter(L=>counts[L]===min);
     const targetLetter = candidates[Math.floor(Math.random()*candidates.length)];
     const targetIndex = LETTERS.indexOf(targetLetter);
 
-    // rotate by swapping to land correct at targetIndex
     if(ci !== targetIndex){
       const tmp = s[targetIndex];
       s[targetIndex] = s[ci];
@@ -638,6 +649,7 @@ function buildBalancedSet(raw){
 
     return {
       stem: q.stem,
+      passage: q.passage || "",
       tag: q.tag || "OST-style • CS aligned",
       hint: q.hint || "Hint: Focus on the level of government and the power described in the stem.",
       explain: q.explain || "Because the correct option matches the constitutional power or civic process in the stem.",
@@ -646,13 +658,9 @@ function buildBalancedSet(raw){
     };
   });
 
-  // Randomize question order (does NOT change the balanced answer distribution)
   return shuffle(built);
 }
 
-/* =========================
-   GAME STATE
-========================= */
 const KEY = "LEGEND_GOV1_V1";
 let state = null;
 let timer = null;
@@ -674,6 +682,8 @@ const nameInput = document.getElementById('nameInput');
 const qnum = document.getElementById('qnum');
 const tag = document.getElementById('tag');
 const stem = document.getElementById('stem');
+const passageBox = document.getElementById('passageBox');
+const passageBody = document.getElementById('passageBody');
 const choicesBox = document.getElementById('choices');
 const goodMsg = document.getElementById('goodMsg');
 const badMsg = document.getElementById('badMsg');
@@ -689,12 +699,8 @@ const finAcc = document.getElementById('finAcc');
 const finMiss = document.getElementById('finMiss');
 const finResult = document.getElementById('finResult');
 
-function nowStr(){
-  const d = new Date();
-  return d.toLocaleString([], {year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"});
-}
-function dateOnly(){
-  const d = new Date();
+function dateOnlyFrom(ts){
+  const d = new Date(ts || Date.now());
   return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
 }
 function timeOnly(dt){
@@ -718,15 +724,12 @@ function load(){
 }
 function hardRestart(){
   localStorage.removeItem(KEY);
-  // also clear any timer state
   window.location.reload();
 }
 
-// Buttons
 document.getElementById('restartBtn').addEventListener('click', hardRestart);
 document.getElementById('restartBtn2').addEventListener('click', hardRestart);
 
-// Start
 startBtn.addEventListener('click', ()=>{
   const nm = (nameInput.value||"").trim();
   if(!nm){
@@ -754,8 +757,8 @@ function startNew(name){
     idx: 0,
     bank,
     misses: 0,
-    attempts: 0,         // total attempts
-    wrongSet: {},        // per-question miss recorded once: {qIndex:true}
+    attempts: 0,
+    wrongSet: {},
     finished: false
   };
   save();
@@ -767,11 +770,10 @@ function beginUI(){
   game.style.display="block";
 
   elPlayerName.textContent = state.name;
-  elDateStamp.textContent = dateOnly();
+  elDateStamp.textContent = dateOnlyFrom(state.startAt);
   elStartStamp.textContent = timeOnly(state.startAt);
   elEndStamp.textContent = "—";
 
-  // timer
   if(timer) clearInterval(timer);
   timer = setInterval(()=>{
     elElapsed.textContent = fmtElapsed(Date.now()-state.startAt);
@@ -785,7 +787,7 @@ function computeAcc(){
   const wrong = state.misses;
   if(total===0) return "—";
   const correct = total - wrong;
-  const pct = Math.round((correct/total)*1000)/10; // 0.1 precision
+  const pct = Math.round((correct/total)*1000)/10;
   return `${pct}%`;
 }
 
@@ -813,9 +815,17 @@ function render(){
 
   qnum.textContent = `Question ${state.idx+1}`;
   tag.textContent = q.tag || "OST-style • CS aligned";
+
+  if(q.passage && q.passage.trim()){
+    passageBox.style.display = "block";
+    passageBody.innerHTML = q.passage;
+  }else{
+    passageBox.style.display = "none";
+    passageBody.innerHTML = "";
+  }
+
   stem.textContent = q.stem;
 
-  // build buttons
   choicesBox.innerHTML = "";
   q.choices.forEach((c, i)=>{
     const btn = document.createElement('button');
@@ -844,7 +854,6 @@ function choose(choiceIndex){
 
     save();
 
-    // move on quickly (still gives a quick “why”)
     setTimeout(()=>{
       state.idx += 1;
       if(state.idx >= state.bank.length){
@@ -857,7 +866,6 @@ function choose(choiceIndex){
     }, 1100);
 
   }else{
-    // record miss ONCE per question (first time they miss it)
     if(!state.wrongSet[state.idx]){
       state.wrongSet[state.idx] = true;
       state.misses += 1;
@@ -871,10 +879,8 @@ function choose(choiceIndex){
     hintMsg.style.display="block";
     hintMsg.textContent = q.hint || "Hint: Identify the level of government and the power described.";
 
-    // keep choices enabled; must correct to move on
     save();
 
-    // update stats immediately
     elMisses.textContent = String(state.misses);
     elAcc.textContent = computeAcc();
   }
@@ -896,7 +902,7 @@ function showFinish(){
   finish.style.display="block";
 
   finName.textContent = state.name;
-  finDate.textContent = dateOnly();
+  finDate.textContent = dateOnlyFrom(state.startAt);
   finStart.textContent = timeOnly(state.startAt);
   finEnd.textContent = timeOnly(state.endAt);
   finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
@@ -914,34 +920,30 @@ function showFinish(){
     finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
   }
 
-  // hide question box interactions once finished
   lockChoices(true);
 }
 
-/* =========================
-   BOOT
-========================= */
 (function boot(){
   const existing = load();
   if(existing && existing.version==="GOV1_V1"){
     state = existing;
-    // If they were finished, show finish, else resume.
     gate.style.display = "none";
     game.style.display = "block";
     elPlayerName.textContent = state.name || "—";
-    elDateStamp.textContent = dateOnly();
+    elDateStamp.textContent = dateOnlyFrom(state.startAt || Date.now());
     elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
     elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
 
     if(!state.finished){
-      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      timer = setInterval(()=>{
+        elElapsed.textContent = fmtElapsed(Date.now()-state.startAt);
+      }, 250);
       render();
     }else{
       elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
       showFinish();
     }
   }else{
-    // show gate
     gate.style.display="block";
     game.style.display="none";
   }
